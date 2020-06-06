@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+        <h1 class="text-center mt-5"> Добавить Торар </h1>
+        <div class="container">
+            <form method="POST" enctype="multipart/form-data">    
+                      {{ form.hidden_tag() }}
+          <div>
+              {{ form.brand.label() }} 
+              {{ form.brand(class="form-control flex-grow-2 mr-2") }} 
+
+          </div>
+          <div>
+            {{ form.name.label() }} 
+            {{ form.name(class="form-control flex-grow-2 mr-2") }} 
+
+        </div>
+        <div>
+            {{ form.aromat.label() }} 
+            {{ form.aromat(class="form-control flex-grow-2 mr-2") }} 
+
+        </div>
+              <div class="form-group">
+                {{ form.content.label() }} 
+                {{form.content(class="form-control") }} 
+                {% if form.content.errors %}
+                    {% for error in form.content.errors %}
+                    <div style="background-color: rosybrown; border-radius: 5px; border: 1px solid black;">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                    {% endif %} 
+
+                    <div>
+                        {{ form.price.label() }} 
+                        {{ form.price(class="form-control flex-grow-2 mr-2") }} 
+          
+                    </div>
+                    <div>
+                        {{ form.alt_txt.label() }} 
+                        {{ form.alt_txt(class="form-control flex-grow-2 mr-2") }} 
+          
+                    </div>
+                    <div class="form-group">
+                        {{form.img}} 
+                    </div>
+
+                 <div style="margin-left: 85%; padding-top: 5px;">
+            </div>
+
+
+            <div class="form-group">
+                {{ form.img_name.label() }} 
+                {{form.img_name(class="form-control") }} 
+                {% if form.img_name.errors %}
+                    {% for error in form.img_name.errors %}
+                    <div style="background-color: rosybrown; border-radius: 5px; border: 1px solid black;">
+                        {{ error }}
+                        </div>
+                        {% endfor %}
+                        {% endif %} 
+         <div style="margin-left: 85%; padding-top: 5px;">
+            {{  form.Btm(class="btn btn-primary") }}  </div>
+    </div>
+
+                </form>
+            
+    </div>
+{% endblock %}

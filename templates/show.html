@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+
+{% endblock %}
+
+{%block content%}
+
+{%endblock%}	
+
+
+{% block body %}
+
+<div class="container">
+    <img src="{{content.img}}" {{content.img}}>
+    <b>{{content.content}}</b>
+
+    <div class="container">
+    <a href="/cart?id={{content.id}}" class="btn btn-block btn-primary">Добавить в корзину </a> </div>
+</div>
+<div class="container">
+    <p>Отзывы</p>
+    <b>{{x.authorOtziv}}</b>    <p>{{x.otziv}}</p>
+
+
+</div>
+
+<div class="container" style="max-width: 480px; margin-top:100px;">
+    
+    <form method="POST" action="" >
+      {{ form.hidden_tag() }}
+
+          {{ form.Rev.label }}
+
+          {% if form.Rev.errors %}
+          {{ form.Rev}}
+                  {% for error in form.Rev.errors %}
+                      <span>{{ error }}</span>
+                  {% endfor %}
+              
+          {% else %}
+              {{ form.Rev(class="form-control form-control-lg") }}
+          {% endif %}
+          <div style="margin-left: 80%; padding-top: 5px;">
+            {{  form.Btm(class="btn btn-primary") }}  
+      </div>
+{% endblock %}
