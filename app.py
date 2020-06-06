@@ -66,8 +66,6 @@ class Products(db.Model):
 
 
 
-
-
     def __repr__(self):
         return f'<Article{self.content}>'
 
@@ -316,7 +314,7 @@ def show():
     content=Products.query.filter_by(id=nameId).first()
     revs1=request.form.get('Rev')
     user=current_user.username
-    user_id='1'
+    user_id=current_user.get_id()
 
     print(revs1,user)
 
