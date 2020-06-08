@@ -1,0 +1,107 @@
+/*Whubs.com - Download Free Responsive Website Layout Templates designed on HTML5 CSS3,
+Bootstrap which are 100% Mobile friendly. w3Hubs all Layouts are responsive cross 
+browser supported, best quality world class designs.*/
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800');
+body{
+width: 100%;
+overflow-x:hidden;
+font-family: "Open Sans";
+}
+h2{
+	text-align: center;
+	padding-top: 20px;
+}
+
+.row{
+	padding-top: 30px;
+	text-align: center;
+}
+footer p{
+line-height: 1.6;
+font-family: "Open Sans";
+	
+}
+ul{
+	padding: 0;
+	margin: 0;
+}
+ul li{
+	padding-top: 5px;
+	
+}
+footer{
+color:#fff;
+background-color:#28B463;
+padding: 5px 0;
+background-position:bottom;	
+}
+
+ul{
+	display:block;
+}
+ul li{
+	list-style-type: none;
+	
+}
+ul li a,.copyright a{
+	color: #fff;
+	font-size: 18px;
+	text-decoration-line: none;
+
+}
+ul li a:hover,.copyright a{
+	color: #196F3D;
+	text-decoration-line: none;
+}
+footer .icon{
+	text-align: center;
+	padding-bottom: 30px;
+}
+footer .icon .fa{
+	padding: 10px;
+	font-size: 50px;
+	padding-right: 40px;
+	color: #fff;
+}
+footer .icon .fa:hover{
+	color: #AF601A;
+}
+.copyright{
+	padding: 0;
+	margin: 0;
+	text-align: center;
+	background: #000;
+	color: #fff;
+}
+.copyright p{
+	color: #fff;
+	text-align: center;
+	padding: 20px; 
+	margin: 0;
+}
+@media(max-width: 768px){
+	.col-sm-6,footer .icon{
+		padding-top: 20px;
+	}
+}
+@media(max-width: 575px){
+	ul,h3{
+		padding-top: 10px;
+		letter-spacing: 1px;
+	}
+}
+@media(max-width:442px){
+	.icon .fa{
+		font-size: 
+	}
+	footer .icon .fa{
+		font-size: 35px;
+		padding-right: 30px;
+	}
+}
+@media(max-width: 348px){
+	footer .icon .fa{
+		font-size: 35px;
+		padding-right: 20px;
+	}
+}

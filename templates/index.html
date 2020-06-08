@@ -19,6 +19,7 @@
 			<div class="filter-content collapse show" id="collapse_1" style="">
 				
 			</div>
+			<form  action="" method="POST">
 		<article class="filter-group">
 			<header class="card-header">
 				<a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
@@ -31,12 +32,13 @@
 				
 				<div class="card-body">
 					<div class="card-body"> 
-						{%for brand in brand%} 
-						<label class="custom-control custom-radio">
-							<input type="radio" name="myfilter_radio" checked={{brand.name}} class="custom-control-input">
-							<div class="custom-control-label"> {{brand.brand}} </div>
-						  </label>{%endfor%}
+					
 
+						{%for brand in brand%} 
+						<label class="custom-control custom-radio" name="radio">
+							<input type="radio" name="myfilter_radio" value="{{brand.brand}}"  checked="" class="custom-control-input">
+							<div class="custom-control-label"  > {{brand.brand}} </div>
+						  </label>{%endfor%}
 		</div> <!-- card-body.// -->
 			</div>
 		</article> <!-- filter-group .// -->
@@ -80,7 +82,10 @@
 					  <input class="form-control" placeholder="20000" type="number">
 					</div>
 					</div> <!-- form-row.// -->
-					<a href="/choice" class="btn btn-block btn-primary">Выбрать</a>
+					<button class="btn btn-block btn-primary">Выбрать</a>		
+				
+				</form>
+
 				</div><!-- card-body.// -->
 			</div>
 		</article>
@@ -103,14 +108,14 @@
 
 					</select>
 
-				<div class="btn-group">
-					<a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view"> 
-						<i class="fa fa-bars"></i></a>
-					<a href="#" class="btn  btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view"> 
-						<i class="fa fa-th"></i></a>
-				</div>
+				
 			</div>
-	</header><!-- sect-heading -->
+	</header><!-- view list and table  <div class="btn-group">
+		<a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view"> 
+			<i class="fa fa-bars"></i></a>
+		<a href="#" class="btn  btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view"> 
+			<i class="fa fa-th"></i></a>
+	</div>-->
 {%endblock%}	
 
 
@@ -149,6 +154,10 @@
 						<span class="price">{{item.price}}</span>
 					</div> <!-- price-wrap.// -->
 				</div>
+
+				
+
+
 				<a href="/cart?id={{item.id}}" class="btn btn-block btn-primary">Добавить в корзину </a>
 			</figcaption>
 		</figure>
@@ -159,6 +168,7 @@
 
 
 	{% endfor %}
+	</div>	
 
 
 	<nav aria-label="Page navigation example">
@@ -184,6 +194,8 @@
 			</a>
 		  </li>
 		</ul>
+
+
 		<img src="/static/images/uppp.png" alt="Наверх" title="Наверх" id="Go_Top"
 		style="position: fixed; bottom: 25px; right: 1px; cursor: pointer; margin-right: 20px; ">
 	  </nav>

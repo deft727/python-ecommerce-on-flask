@@ -158,11 +158,13 @@ def index():
     search=SearchForm()
     order=request.args.get('sort')
     
-
-    #x=request.args.get('choice')
-    #print(x)
+    if request.form.get("myfilter_radio"):
+        x=request.form.get("myfilter_radio")
+        print(x)
+        items=Products.query.filter(Products.brand.contains(x))
+        print(items)
  
-    if order is None:
+    elif order is None:
         items = Products.query.order_by(Products.creationData.desc())
 
     elif order=='1':
@@ -253,7 +255,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        print(hashed_password)
+        #print(hashed_password)
         city=form.city.data
         otdel=form.otdel.data
         phone=form.phone.data
@@ -316,7 +318,7 @@ def show():
     user=current_user.username
     user_id=current_user.get_id()
 
-    print(revs1,user)
+    #print(revs1,user)
 
     if revies.validate_on_submit():
 
@@ -334,7 +336,7 @@ def profile():
     name=Admin()
     return render_template ('profile.html',admin=name,search=search)
 
-@app.route('/cart',methods=['GET'])
+@app.route('/cart',methods=['GET' ,'POST'])
 def cart():
     search=SearchForm()
     name=Admin()
@@ -345,7 +347,19 @@ def cart():
     if items:
         return render_template('cart.html',admin=name,search=search,items=items)
     else:
-        return render_template('cart.html',admin=name,search=search,items='items')
+        return render_template('cart.html',admin=name,search=search,items=items)
+
+
+@app.route('/add-to-cart', methods=['GET', 'POST'])
+def add_to_cart():
+    if request.method == 'POST':
+        id = request.args.get('id')
+        qty = int(request.form['qty'])
+
+        cart = session.setdefault('cart', {})
+        cart[item_id] = cart.get(product_id, 0) + qty
+
+        return redirect(url_for('index'))
 
         
 
