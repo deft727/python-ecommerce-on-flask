@@ -41,7 +41,7 @@ class User(db.Model, UserMixin):
     otdel=db.Column(db.String(60), nullable=False)
     phone = db.Column(db.Integer, nullable=False)
 
-    otzivy= db.Column(db.String(360), nullable=True)
+    otzivy= db.relationship('Revs',backref='User',lazy='dynamic')
 
 
     def __repr__(self):
@@ -56,7 +56,7 @@ class Products(db.Model):
     brand = db.Column(db.String(50), nullable=False)
     Authors=db.Column(db.String(150), nullable=False)
     name = db.Column(db.String(150), nullable=False)
-    price= db.Column(db.String(150), nullable=False)
+    price=  db.Column(db.String(150), nullable=False)
     aromat=db.Column(db.String(150), nullable=False)
     content = db.Column(db.Text, nullable=False)
     alt_txt=db.Column(db.String(250), nullable=True)
@@ -64,6 +64,7 @@ class Products(db.Model):
     img=db.Column(db.String(248), nullable=True)
     user_id = db.Column(db.Integer, nullable=False)
 
+    otzivy2= db.relationship('Revs',backref='Products',lazy='dynamic')
 
 
     def __repr__(self):
@@ -133,12 +134,14 @@ class Admin():
 class Revs(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     otziv=db.Column(db.String(250), nullable=True)
-    authorOtziv=db.Column(db.String(100), nullable=True)
-    user_id = db.Column(db.Integer, nullable=True)
+    author=db.Column(db.String(250), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    product_id=db.Column(db.Integer, db.ForeignKey('products.id'))
+    creationData = db.Column(db.DateTime)
 
 
 class Reviews(FlaskForm):
-    Rev = StringField(u'Оставь отзыв', widget=TextArea(),validators=[DataRequired()])
+    Rev = StringField(u'Оставить отзыв', widget=TextArea(),validators=[DataRequired()])
     Btm = SubmitField('Добавить')
 
 
@@ -158,14 +161,24 @@ def index():
     search=SearchForm()
     order=request.args.get('sort')
     
-    if request.form.get("myfilter_radio"):
-        x=request.form.get("myfilter_radio")
-        print(x)
-        items=Products.query.filter(Products.brand.contains(x))
-        print(items)
- 
+
+    # my filter right block
+    if request.method=="POST":
+        x=request.form.get("myfilter_brand")
+        x2=request.form.get("myfilter_aromat")
+        if x:
+            items=Products.query.filter(Products.brand.contains(x))
+        if x2:
+            items=Products.query.filter(Products.brand.contains(x2))
+        elif x and x2:
+            items=Products.query.filter(Products.brand.contains(x2)  | Products.aromat.contains(x2))
+        
+    # if not choices
+
     elif order is None:
         items = Products.query.order_by(Products.creationData.desc())
+
+    # if choice
 
     elif order=='1':
         items = Products.query.order_by(Products.name)
@@ -184,7 +197,7 @@ def index():
     else:
         page=1
         
-
+    # if search 
     data=request.form.get('search')
     if data:
         items=Products.query.filter(Products.brand.contains(data) | Products.name.contains(data))
@@ -315,19 +328,22 @@ def show():
     nameId=request.args.get('id')
     content=Products.query.filter_by(id=nameId).first()
     revs1=request.form.get('Rev')
-    user=current_user.username
-    user_id=current_user.get_id()
-
+    otziv=Revs.query.filter_by(product_id=nameId).all()
+    #otziv=Revs.query.order_by(Revs.creationData.desc())
     #print(revs1,user)
 
     if revies.validate_on_submit():
-
-        rev= Revs(authorOtziv=user,otziv=revs1,user_id=user_id)
+        time = datetime.now()
+        author=current_user.username
+        user_id=current_user.get_id()
+        rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time)
         db.session.add(rev)
         db.session.commit()
-    x=Revs.query.filter_by(id=nameId).first()
+        return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv)
 
-    return render_template('show.html', search=search,title='lkscas',content=content,admin=name,form=form,x=x)
+
+
+    return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv)
 
 
 @app.route('/profile',methods=['GET', 'POST'])
@@ -335,6 +351,7 @@ def profile():
     search=SearchForm()
     name=Admin()
     return render_template ('profile.html',admin=name,search=search)
+
 
 @app.route('/cart',methods=['GET' ,'POST'])
 def cart():

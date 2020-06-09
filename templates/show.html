@@ -21,13 +21,18 @@
 </div>
 <div class="container">
     <p>Отзывы</p>
-    <b>{{x.authorOtziv}}</b>    <p>{{x.otziv}}</p>
+    {%for i in x |sort(attribute='creationData')|reverse %}
+    <b>{{i.author}}</b>    <p>{{i.otziv}}</p>
+    {%else%}
+    <p>Отзывов еще нету</p>
+    {%endfor%}
 
 
 </div>
 
 <div class="container" style="max-width: 480px; margin-top:100px;">
-    
+    {%if current_user.is_authenticated%}
+
     <form method="POST" action="" >
       {{ form.hidden_tag() }}
 
@@ -43,6 +48,8 @@
               {{ form.Rev(class="form-control form-control-lg") }}
           {% endif %}
           <div style="margin-left: 80%; padding-top: 5px;">
-            {{  form.Btm(class="btn btn-primary") }}  
+            {{  form.Btm(class="btn btn-primary") }} 
+            
+            {%endif%}
       </div>
 {% endblock %}

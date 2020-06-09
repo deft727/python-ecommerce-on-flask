@@ -34,6 +34,7 @@ def get_data(pages):
         brand= ad.find('span', class_='brand-name').text.strip()
         name=ad.find('div', class_='h2').text.strip() 
         price=ad.find('span', class_='price').text.strip()
+        print(price)
         img=ad.find('div', class_='product-image').a.img['data-src'].strip()
         text=ad.find('span', class_='product-type').text.strip() 
 
