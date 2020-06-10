@@ -24,24 +24,40 @@
 
 		<article class="card mb-3">
 			<div class="card-body">
-				
+				<form action="" method="POST" name='edit'>
 				<figure class="icontext">
 						<div class="icon">
-							<img class="rounded-circle img-sm border" src="images/avatars/avatar3.jpg">
+							<img class="rounded-circle img-sm border" src="/static/images/avatar/avatar.png">
 						</div>
-						<div class="text">
-							<strong> Mr. Jackson Someone </strong> <br> 
-							myloginname@gmail.com <br> 
-							<a href="#">Edit</a>
+						<div class="text" >
+							<strong> {{user.username}} </strong> <br> 
+							{{user.email}}<br> 
 						</div>
 				</figure>
 				<hr>
 				<p>
-					<i class="fa fa-map-marker text-muted"></i> &nbsp; My address:  
-					 <br>
-					Tashkent city, Street name, Building 123, House 321 &nbsp 
-					<a href="#" class="btn-link"> Edit</a>
-				</p>
+					<div class="container">
+					<i class="fa fa-map-marker text-muted"></i> &nbsp; Адрес доставки:  
+					 
+					<table class="table table-bordered">
+						<thead>
+						  <tr>
+							<th scope="col">Город</th>
+							<th scope="col">Отделение</th>
+							<th scope="col">Телефон</th>
+						  </tr>
+						</thead>
+						<tbody>
+						  <tr>
+							<td>{{user.city}}</td>
+							<td>{{user.otdel}}</td>
+							<td>{{user.phone}}</td>
+						  </tr></table>
+
+
+					<button type="button" class="btn btn-secondary btn-sm">Редактировать</button>
+				</p> <br></div>
+			</form>
 
 				
 
@@ -78,42 +94,27 @@
 
 		<article class="card  mb-3">
 			<div class="card-body">
-				<h5 class="card-title mb-4">Recent orders </h5>	
-
+				<h5 class="card-title mb-4">Отзывы </h5>	
 				<div class="row">
 				<div class="col-md-6">
+					{%for i in otzivy%}
 					<figure class="itemside  mb-3">
-						<div class="aside"><img src="images/items/1.jpg" class="border img-sm"></div>
+						<div class="aside"><img src="{{i.img}}" class="border img-sm"></div>
 						<figcaption class="info">
-							<time class="text-muted"><i class="fa fa-calendar-alt"></i> 12.09.2019</time>
-							<p>Great item name goes here </p>
-							<span class="text-warning">Pending</span>
-						</figcaption>
+							<time class="text-muted"><i class="fa fa-calendar-alt"></i>{{i.creationData}} </time><br>
+							<b>{{i.author}}  </b>
+
+							<form action="" method="POST" >
+							<p > {{i.otziv}}  </p>	
+						</figcaption> <button  name="delete" value={{i.id}} class="btn btn-link">удалить</button>
+							</form>
+
 					</figure>
+					{%endfor%}
 				</div> <!-- col.// -->
-				<div class="col-md-6">
-					<figure class="itemside  mb-3">
-						<div class="aside"><img src="images/items/2.jpg" class="border img-sm"></div>
-						<figcaption class="info">
-							<time class="text-muted"><i class="fa fa-calendar-alt"></i> 12.09.2019</time>
-							<p>Machine for kitchen to blend </p>
-							<span class="text-success">Departured</span>
-						</figcaption>
-					</figure>
-				</div> <!-- col.// -->
-				<div class="col-md-6">
-					<figure class="itemside mb-3">
-						<div class="aside"><img src="images/items/3.jpg" class="border img-sm"></div>
-						<figcaption class="info">
-							<time class="text-muted"><i class="fa fa-calendar-alt"></i> 12.09.2019</time>
-							<p>Ladies bag original leather </p>
-							<span class="text-success">Shipped  </span>
-						</figcaption>
-					</figure>
-				</div> <!-- col.// -->
+				
 			</div> <!-- row.// -->
 
-			<a href="#" class="btn btn-outline-primary"> See all orders  </a>
 			</div> <!-- card-body .// -->
 		</article> <!-- card.// -->
 

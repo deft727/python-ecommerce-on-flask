@@ -137,6 +137,7 @@ class Revs(db.Model):
     author=db.Column(db.String(250), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     product_id=db.Column(db.Integer, db.ForeignKey('products.id'))
+    img=db.Column(db.String(250), nullable=True)
     creationData = db.Column(db.DateTime)
 
 
@@ -275,10 +276,15 @@ def register():
         phone=form.phone.data
         user = User(username=form.username.data, email=form.email.data,
                     password=hashed_password,city=city,otdel=otdel,phone=phone)
-        db.session.add(user)
-        db.session.commit()
-        flash('Спасибо за регистрацию')
-        return redirect('/login')
+        try:
+            db.session.add(user)
+            db.session.commit()
+        except:
+            db.session.add(user)
+            db.session.commit()
+        finally:
+            flash('Спасибо за регистрацию')
+            return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form,search=search,admin=name)
 
 @app.route('/login',methods=['GET', 'POST'])
@@ -328,6 +334,7 @@ def show():
     revies=Reviews()
     nameId=request.args.get('id')
     content=Products.query.filter_by(id=nameId).first()
+    img=content.img
     revs1=request.form.get('Rev')
     otziv=Revs.query.filter_by(product_id=nameId).all()
     #otziv=Revs.query.order_by(Revs.creationData.desc())
@@ -337,7 +344,7 @@ def show():
         time = datetime.now()
         author=current_user.username
         user_id=current_user.get_id()
-        rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time)
+        rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time,img=img)
         db.session.add(rev)
         db.session.commit()
         return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv)
@@ -351,7 +358,21 @@ def show():
 def profile():
     search=SearchForm()
     name=Admin()
-    return render_template ('profile.html',admin=name,search=search)
+    user=current_user.get_id()
+    profileUser=User.query.filter_by(id=user).first()
+    otzivy=Revs.query.filter_by(user_id=user).all()
+    idREv=request.form.get('delete')
+    if idREv is not None:
+        rev=Revs.query.filter_by(id=idREv).first()
+        db.session.delete(rev)
+        db.session.commit()
+        return redirect ('/profile')
+
+    return render_template ('profile.html',admin=name,search=search,user=profileUser,otzivy=otzivy)
+
+# @app.route('/remove-otziv',methods=['GET'])
+
+
 
 
 @app.route('/cart',methods=['GET' ,'POST'])
