@@ -16,7 +16,7 @@
 			
 	<div class="card">
 
-			<div class="filter-content collapse show" id="collapse_1" style="">
+			<div class="filter-content collapse show" id="collapse_1" >
 				
 			</div>
 			<form  action="" method="POST">
@@ -27,7 +27,7 @@
 					<h6 class="title">Бренды</h6>
 				</a>
 			</header>
-			<div class="filter-content collapse show" id="collapse_2" style="">
+			<div class="filter-content collapse show" id="collapse_2" >
 
 				
 				<div class="card-body">
@@ -51,7 +51,7 @@
 					<h6 class="title"> Выбрать тип аромата </h6>
 				</a>
 			</header>
-			<div class="filter-content collapse in" id="collapse_5" style="">
+			<div class="filter-content collapse in" id="collapse_5">
 				<div class="card-body"> 
 					{%for aromat in aromat%} 
 					<label class="custom-control custom-radio">
@@ -64,7 +64,7 @@
 		</article> <!-- filter-group .// -->
 		
 				
-			<div class="filter-content collapse show" id="collapse_3" style="">
+			<div class="filter-content collapse show" id="collapse_3">
 				<div class="card-body">
 					
 					<div class="form-row">
@@ -127,12 +127,15 @@
 	  
 					<a class="btn btn-danger" href="/remove?id={{ item.id }}">удалить</a>
 				  </div> 
-				  <img src="{{item.img}}">
+				  <img src="/static/images/{{item.img}}">
 
 				{%endif%}
 <!-- "/static/images///  как поправить ................................. -->
 				<img src="{{item.img}}" alt="{{item.alt_txt}}">
-				<a class="btn-overlay" href="{{item.img}}"><i class="fa fa-search-plus"></i> Quick view</a> 
+
+				<!-- <a class="btn-overlay" href="{{item.img}}"><i class="fa fa-search-plus"></i> Quick view</a> -->
+
+
 			</div> <!-- img-wrap.// --></a>
 			<figcaption class="info-wrap">
 				<div class="fix-height">
@@ -140,7 +143,7 @@
 					<a href="/show?id={{ item.id}}" class="title" alt="{{item.alt_txt}}"><b>{{item.brand}}</b></a>
 					<p>{{item.name}}</p>
 					<div class="price-wrap mt-2">
-						<span class="price">{{item.price}}</span>
+						<span class="price">{{item.price}} грн</span>
 					</div> <!-- price-wrap.// -->
 				</div>
 

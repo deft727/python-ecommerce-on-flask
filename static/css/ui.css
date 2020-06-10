@@ -11,7 +11,7 @@ INCLUDE STYLES AND COMPONENTS
 /* ================== HELPERS  =================== */
 a:hover {
   text-decoration: none; }
-
+.img-fluid{max-width:100%;height:auto}
 .img-wrap {
   
   text-align: center;

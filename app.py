@@ -109,7 +109,7 @@ class ProductsForm(FlaskForm):
     content = StringField(u'описание', widget=TextArea(),validators=[DataRequired()])
     price = IntegerField('Цена', validators=[DataRequired()])
     alt_txt=StringField('Альтернативный текст', validators=[DataRequired()])
-    img=  FileField(validators=[FileRequired()])
+    img=  FileField()
     img_name=StringField('img name', validators=[DataRequired()])
     Btm = SubmitField('Добавить')
 
@@ -166,10 +166,11 @@ def index():
     if request.method=="POST":
         x=request.form.get("myfilter_brand")
         x2=request.form.get("myfilter_aromat")
+        print(x2)
         if x:
             items=Products.query.filter(Products.brand.contains(x))
         if x2:
-            items=Products.query.filter(Products.brand.contains(x2))
+            items=Products.query.filter(Products.aromat.contains(x2))
         elif x and x2:
             items=Products.query.filter(Products.brand.contains(x2)  | Products.aromat.contains(x2))
         
@@ -367,18 +368,68 @@ def cart():
         return render_template('cart.html',admin=name,search=search,items=items)
 
 
-@app.route('/add-to-cart', methods=['GET', 'POST'])
-def add_to_cart():
-    if request.method == 'POST':
-        id = request.args.get('id')
-        qty = int(request.form['qty'])
+# @app.route('/add-to-cart', methods=['GET', 'POST'])
+# def add_to_cart():
+#     if request.method == 'POST':
+#         id = request.args.get('id')
+#         qty = int(request.form['qty'])
 
-        cart = session.setdefault('cart', {})
-        cart[item_id] = cart.get(product_id, 0) + qty
+#         cart = session.setdefault('cart', {})
+#         cart[item_id] = cart.get(product_id, 0) + qty
 
-        return redirect(url_for('index'))
+#         return redirect(url_for('index'))
 
         
+@app.route('/edit', methods=['GET', 'POST'])
+@login_required
+def edit():
+    name=Admin()
+    name=name.name
+
+    art=Products.query.filter_by(id=request.args.get('id')).first()
+
+    if current_user.username==name:
+        search=SearchForm()
+        time = datetime.now()
+        form = ProductsForm()
+
+        form.brand.data=art.brand
+        form.name.data=art.name
+        form.aromat.date=art.aromat
+        form.content.data=art.content
+        form.price.data=art.price
+        form.alt_txt.data=art.alt_txt
+        form.img_name.data=art.img
+        f=form.img.data
+
+        if f:
+            fname=request.form.get('img_name')
+            img_path = os.getcwd() + url_for('static', filename='images/' + fname)
+            image = Image.open(f)
+            size=480,480
+            image = image.resize(size)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
+
+
+        if form.validate_on_submit():
+            art.brand=request.form.get('brand')
+            art.name=request.form.get('name')
+            art.aromat=request.form.get('aromat')
+            art.price=request.form.get('price')
+            art.alt=request.form.get('alt_txt')
+            art.img=request.form.get('img_name')
+            art.content= request.form.get('content')
+            art.Authors=name
+            art.userId=current_user.id
+            art.creationData=time
+            db.session.commit()
+            return redirect('/')
+    else:
+        return redirect('/')
+
+    return render_template('edit.html', form=form,search=search,admin=name)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
