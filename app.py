@@ -148,7 +148,7 @@ class Reviews(FlaskForm):
 
 class Cart(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, primary_key=True)
-    productid = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False, primary_key=True)
+    productid = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
@@ -167,19 +167,18 @@ def index():
     page=request.args.get('page')
     search=SearchForm()
     order=request.args.get('sort')
-    
+    x=request.form.get("myfilter_brand")
+    x2=request.form.get("myfilter_aromat")
+    user_id=current_user.get_id()
 
-    # my filter right block
-    if request.method=="POST":
-        x=request.form.get("myfilter_brand")
-        x2=request.form.get("myfilter_aromat")
-        print(x2)
+    # my filter left block
+    if x or x2 is not None:
         if x:
             items=Products.query.filter(Products.brand.contains(x))
         if x2:
             items=Products.query.filter(Products.aromat.contains(x2))
         elif x and x2:
-            items=Products.query.filter(Products.brand.contains(x2)  | Products.aromat.contains(x2))
+            items=Products.query.filter(Products.brand.contains(x)  | Products.aromat.contains(x2))
         
     # if not choices
 
@@ -207,20 +206,31 @@ def index():
         
     # if search 
     data=request.form.get('search')
-    if data:
+    if data is not None:
         items=Products.query.filter(Products.brand.contains(data) | Products.name.contains(data))
 
-  
+
+    #add.item.to.cart.or.
+    cartId=request.form.get('item_to_cart')
+    if cartId is not None:
+        item=Cart.query.filter_by(productid=cartId).first()
+        if item is None:
+            product=Cart(userid=user_id,productid=cartId,quantity=1)
+            db.session.add(product)
+            db.session.commit()
+        else:
+            number=int(item.quantity+1)
+            item.quantity=number
+            # db.session.add(product)
+            db.session.commit()
+
     pages=items.paginate(page=page,per_page=15)
     colvo= items.count()
-
-
+    cartProduct= Cart.query.filter_by(userid=user_id).count()
     brand=Products.query.distinct(Products.brand).group_by(Products.brand)
-  
     aromat=Products.query.distinct(Products.aromat).group_by(Products.aromat)
-
     return render_template ('index.html',items=items,title='ParfumeLover',
-     colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat)
+    colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat,cartProduct=cartProduct)
 
 
 
@@ -381,35 +391,33 @@ def profile():
 
     return render_template ('profile.html',admin=name,search=search,user=profileUser,otzivy=otzivy)
 
-# @app.route('/remove-otziv',methods=['GET'])
-
-
 
 
 @app.route('/cart',methods=['GET' ,'POST'])
 def cart():
     search=SearchForm()
     name=Admin()
-    items=[]
-    cartId=request.args.get('id')
-    cart=Products.query.filter_by(id=cartId).first()
-    items.append(cart)
-    if items:
-        return render_template('cart.html',admin=name,search=search,items=items)
-    else:
-        return render_template('cart.html',admin=name,search=search,items=items)
+    if current_user.is_anonymous:
+        return redirect('/login')
+    user_id=current_user.get_id()
+    cart=Cart.query.filter_by(userid=user_id).all()
+    x=[]
+    for i in cart:
+        product=Products.query.filter_by(id=i.productid).first()
+        x.append(product)
+    # totalPrice=0
+    # for y in x:
+    #     totalPrice+=y.price
+    # print(totalPrice)
+    deleteFromCart=request.form.get('deleteFromCart')
+    print(deleteFromCart)
+    if deleteFromCart is not None:
+        deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
+        db.session.delete(deletecart)
+        db.session.commit()
+        return redirect('/cart')
 
-
-# @app.route('/add-to-cart', methods=['GET', 'POST'])
-# def add_to_cart():
-#     if request.method == 'POST':
-#         id = request.args.get('id')
-#         qty = int(request.form['qty'])
-
-#         cart = session.setdefault('cart', {})
-#         cart[item_id] = cart.get(product_id, 0) + qty
-
-#         return redirect(url_for('index'))
+    return render_template('cart.html',admin=name,search=search,items=x)
 
         
 @app.route('/edit', methods=['GET', 'POST'])

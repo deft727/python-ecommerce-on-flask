@@ -5,7 +5,7 @@
 главная страница
 
 {% endblock %}
-{% block cart %}2 {%endblock%}
+{% block cart %}{{cartProduct}}{%endblock%}
 {%block content%}
 
 <section class="section-content padding-y">
@@ -55,7 +55,7 @@
 				<div class="card-body"> 
 					{%for aromat in aromat%} 
 					<label class="custom-control custom-radio">
-						<input type="radio" name="myfilter_aromat" value="{{brand.aromat}}" class="custom-control-input">
+						<input type="radio" name="myfilter_aromat" value={{aromat.aromat}} class="custom-control-input">
 						<div class="custom-control-label"> {{aromat.aromat}} </div>
 					  </label>{%endfor%}
 
@@ -147,10 +147,11 @@
 					</div> <!-- price-wrap.// -->
 				</div>
 
-				
+				<form action="" method="POST">
 
 
-				<a href="/cart?id={{item.id}}" class="btn btn-block btn-primary">Добавить в корзину </a>
+				<button  name="item_to_cart" value={{item.id}} class="btn btn-primary">Добавить</button>	</form>
+			
 			</figcaption>
 		</figure>
 

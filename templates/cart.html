@@ -40,11 +40,12 @@
   <th scope="col" class="text-right" width="200"> </th>
 </tr>
 </thead>
+{% for i in items %}
+
 <tbody>
 <tr>
 	<td>
 		<figure class="itemside">
-			{% for i in items %}
 			<div class="aside"><img src={{i.img}} class="img-sm"></div>
 			<figcaption class="info">
 				<a href="/cart?id={{i.id}}" class="title text-dark">{{i.brand}}</a>
@@ -54,25 +55,32 @@
 		</figure>
 	</td>
 	<td> 
+		{% set f = 1 %}
 		<select class="form-control">
-			<option>1</option>
-			<option value="2">2</option>	
-			<option>3</option>	
-			<option>4</option>	
-		</select> 
+
+			<option value="2">1</option>
+
+			<option value="2">1</option>
+			<option value="2">2</option>
+			<option value="2">3</option>	
+			<option value="2">4</option>	
+		</select> </form>
 	</td>
 	<td> 
 		<div class="price-wrap"> 
-			<var class="price"> {{i.price}} </var> 
+			<var class="price"> {{i.price*f}} </var> 
 		</div> <!-- price-wrap .// -->
 	</td>
+	
+	<form action="" method="POST" name="deleteFromCart">
+
 	<td class="text-right"> 
 	<a data-original-title="В избранное" title="" href="#" class="btn btn-light" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
-	<a href="#" class="btn btn-light"> Удалить </a>
+	<button  class="btn btn-light"  name="deleteFromCart" value="{{i.id}}"> Удалить </button>
 	</td>
-</tr>{%endfor%}
+</tr></form>
 
-</tbody>
+</tbody>{%endfor%}
 </table>
 
 <div class="card-body border-top">
