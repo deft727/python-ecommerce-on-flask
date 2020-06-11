@@ -92,7 +92,16 @@
       <div class="container" style="border: 1px solid#000;">
         <b>Отзывы:</b>
         {%for i in x |sort(attribute='creationData')|reverse %}
-        <div style="border-bottom: 1px solid#000;"> <b>{{i.author}} </b>  <p>{{i.otziv}}</p></div>
+        <div style="border-bottom: 1px solid#000;"> <b>{{i.author}} </b> 
+          <form action="" method="POST">
+          {% if current_user.username==admin.name or current_user.username == i.author%}
+
+          <button  name="deletePost" value={{i.id}} class="btn btn-primary float-right">удалить</button>
+            {%endif%}    </form>
+          <p>{{i.otziv}}</p>
+
+
+        </div>
         {%else%}
         <p>Отзывов еще нету</p>
         {%endfor%}

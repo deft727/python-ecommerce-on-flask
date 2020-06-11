@@ -146,7 +146,13 @@ class Reviews(FlaskForm):
     Btm = SubmitField('Добавить')
 
 
+class Cart(db.Model):
+    userid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, primary_key=True)
+    productid = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False, primary_key=True)
+    quantity = db.Column(db.Integer, nullable=False)
 
+    def __repr__(self):
+        return f"Cart('{self.userid}', '{self.productid}, '{self.quantity}')"
 
 
 @app.errorhandler(404)
@@ -348,7 +354,12 @@ def show():
         db.session.add(rev)
         db.session.commit()
         return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv)
-
+    deletePost=request.form.get('deletePost')
+    if deletePost is not None:
+        rev=Revs.query.filter_by(id=deletePost).first()
+        db.session.delete(rev)
+        db.session.commit()
+        return redirect ('/')
 
 
     return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv)
