@@ -355,15 +355,29 @@ def show():
     otziv=Revs.query.filter_by(product_id=nameId).all()
     #otziv=Revs.query.order_by(Revs.creationData.desc())
     #print(revs1,user)
+    user_id=current_user.get_id()
+    cartProduct= Cart.query.filter_by(userid=user_id).count()
 
     if revies.validate_on_submit():
         time = datetime.now()
         author=current_user.username
-        user_id=current_user.get_id()
         rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time,img=img)
         db.session.add(rev)
         db.session.commit()
-        return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv)
+        return render_template('show.html', search=search,title=content.name,content=content,admin=name,
+                                form=form,x=otziv,cartProduct=cartProduct)
+    cartId=request.form.get('item_to_cart')
+    if cartId is not None:
+        item=Cart.query.filter_by(productid=cartId).first()
+        if item is None:
+            product=Cart(userid=user_id,productid=cartId,quantity=1)
+            db.session.add(product)
+            db.session.commit()
+        else:
+            number=int(item.quantity+1)
+            item.quantity=number
+            # db.session.add(product)
+            db.session.commit()
     deletePost=request.form.get('deletePost')
     if deletePost is not None:
         rev=Revs.query.filter_by(id=deletePost).first()
@@ -372,7 +386,7 @@ def show():
         return redirect ('/')
 
 
-    return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv)
+    return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv,cartProduct=cartProduct)
 
 
 @app.route('/profile',methods=['GET', 'POST'])
@@ -410,7 +424,6 @@ def cart():
     #     totalPrice+=y.price
     # print(totalPrice)
     deleteFromCart=request.form.get('deleteFromCart')
-    print(deleteFromCart)
     if deleteFromCart is not None:
         deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
         db.session.delete(deletecart)
