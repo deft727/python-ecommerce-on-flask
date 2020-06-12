@@ -3,7 +3,10 @@
 @import url("https://rsms.me/inter/inter.css");
 html {
   font-family: 'Inter', sans-serif;
-  font-size: 15px; }
+  font-size: 16px; }
+body{
+  font-size: 16,5px;
+}
 
 /* ========================
 INCLUDE STYLES AND COMPONENTS
@@ -19,7 +22,9 @@ a:hover {
   .img-wrap img {
     max-width: 100%;
    }
-
+.display-4{color: rgb(18, 216, 18);}
+.mytxt{font-size: 20px;}
+.font-italic{font-size: 20px;}
 .icon-wrap {
   text-align: center;
   display: inline-block; }
@@ -657,7 +662,7 @@ ul.row, ul.row-sm {
   .list-check > li::before {
     font-family: 'Font Awesome 5 Free';
     font-weight: 900;
-    font-size: 12px;
+    font-size: 17px;
     color: #00b517;
     position: absolute;
     top: 2px;

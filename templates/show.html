@@ -66,10 +66,10 @@
             <p >{{content.brand}}</p>
 
                 
-                <span  style="color:rgb(3, 185, 34);font-size: 25px;" >{{content.price}} грн</span>
+                <span  class="display-4"  >{{content.price}} грн</span>
               
 
-            <p style="font-size: 20px;">{{content.content}}</p>
+            <p class="mytxt">{{content.content}}</p>
 
             <form class="d-flex justify-content-left">
               <!-- Default input -->
@@ -89,26 +89,32 @@
       </div>
       <!--Grid row-->
 
-      <div class="container" style="border: 1px solid#000;">
-        <b>Отзывы:</b>
-        {%for i in x |sort(attribute='creationData')|reverse %}
-        <div style="border-bottom: 1px solid#000;"> <b>{{i.author}} </b> 
-          <form action="" method="POST">
-          {% if current_user.username==admin.name or current_user.username == i.author%}
+     
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">Отзывы:</th>
+        </tr>
+      </thead>
+      {%for i in x |sort(attribute='creationData')|reverse %}
+      <tbody>
+        <tr>
+          <td  class="text-primary">{{i.author}}</td>
+        </tr>
+        <tr>
+          <td class="font-italic">{{i.otziv}}
+            {% if current_user.username==admin.name or current_user.username == i.author%}
+            <button  name="deletePost" value={{i.id}} class="btn btn-primary float-right">удалить</button>{%endif%} 
+            
+          </td>
+          {%else%}
+           <td> Отзывов еще нет</td>
+                   {%endfor%}
 
-          <button  name="deletePost" value={{i.id}} class="btn btn-primary float-right">удалить</button>
-            {%endif%}    </form>
-          <p>{{i.otziv}}</p>
+        </tr>
+      </tbody>
+    </table>
 
-
-        </div>
-        {%else%}
-        <p>Отзывов еще нету</p>
-        {%endfor%}
-    
-    
-    </div>
-    
     <div class="container" style="max-width: 480px; margin-top:100px;">
         {%if current_user.is_authenticated%}
     
