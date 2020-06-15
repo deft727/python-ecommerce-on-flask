@@ -24,7 +24,7 @@ a:hover {
    }
 .display-4{color: rgb(18, 216, 18);}
 .mytxt{font-size: 20px;}
-.font-italic{font-size: 20px;}
+.font-italic{font-size: 17px;}
 .icon-wrap {
   text-align: center;
   display: inline-block; }
@@ -379,7 +379,12 @@ p:last-child {
 .header-top-light .nav-link {
   color: #969696; }
   .header-top-light .nav-link:hover
-
+.register{
+  background-color: rosybrown; border-radius: 5px; border: 1px solid black;
+}
+.login{
+  float: right;
+}
 .header-main {
   position: relative;
   padding-top: 1rem;
@@ -421,7 +426,6 @@ p:last-child {
 /* desktop only */
 /* desktop only .end */
 /* ================ SECTION-FOOTER ==================  */
-
 .section-footer ul li {
   margin-bottom: 5px; }
 .section-footer ul a {

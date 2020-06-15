@@ -17,9 +17,6 @@ from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
 
 
-
-
-
 app = Flask(__name__)
 app.config.from_object(MConfig)
 db = SQLAlchemy(app)
@@ -40,36 +37,34 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(60), nullable=False)
     otdel=db.Column(db.String(60), nullable=False)
     phone = db.Column(db.Integer, nullable=False)
-
     otzivy= db.relationship('Revs',backref='User',lazy='dynamic')
-
 
     def __repr__(self):
         return f"User('{self.username}' - '{self.email}')"
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     brand = db.Column(db.String(50), nullable=False)
     Authors=db.Column(db.String(150), nullable=False)
     name = db.Column(db.String(150), nullable=False)
-    price=  db.Column(db.String(150), nullable=False)
-    aromat=db.Column(db.String(150), nullable=False)
+    price=  db.Column(db.Integer, nullable=False)
+    aromat=db.Column(db.String(150), nullable=True)
     content = db.Column(db.Text, nullable=False)
     alt_txt=db.Column(db.String(250), nullable=True)
     creationData = db.Column(db.DateTime)
     img=db.Column(db.String(248), nullable=True)
     user_id = db.Column(db.Integer, nullable=False)
-
     otzivy2= db.relationship('Revs',backref='Products',lazy='dynamic')
 
 
     def __repr__(self):
         return f'<Article{self.content}>'
-
 
 
 class RegistrationForm(FlaskForm):
@@ -93,13 +88,11 @@ class RegistrationForm(FlaskForm):
             raise ValidationError('Такой e-mail уже существует')
 
   
-
 class LoginForm(FlaskForm):
     email = StringField('Электроная почта', validators=[DataRequired(), Email()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     remember = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
-
 
 
 class ProductsForm(FlaskForm):
@@ -113,11 +106,9 @@ class ProductsForm(FlaskForm):
     img_name=StringField('img name', validators=[DataRequired()])
     Btm = SubmitField('Добавить')
 
-    
     def validate_Content(self, field) :
         if len(field.data) < 10 :
-            raise ValidationError('Article must be from 10 characters')
-
+            raise ValidationError('Описание должно быть не менее 10 символов')
 
 
 class SearchForm(FlaskForm):
@@ -155,6 +146,15 @@ class Cart(db.Model):
         return f"Cart('{self.userid}', '{self.productid}, '{self.quantity}')"
 
 
+class Oders(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product = db.Column(db.String(350), nullable=False)
+    rebate = db.Column(db.Integer, nullable=False)    
+    price=db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    creationData = db.Column(db.DateTime)
+
+
 @app.errorhandler(404)
 def page_not_found(error):
     return "такой страницы нет"
@@ -171,7 +171,6 @@ def index():
     x2=request.form.get("myfilter_aromat")
     user_id=current_user.get_id()
 
-    # my filter left block
     if x or x2 is not None:
         if x:
             items=Products.query.filter(Products.brand.contains(x))
@@ -179,14 +178,9 @@ def index():
             items=Products.query.filter(Products.aromat.contains(x2))
         elif x and x2:
             items=Products.query.filter(Products.brand.contains(x)  | Products.aromat.contains(x2))
-        
-    # if not choices
 
     elif order is None:
         items = Products.query.order_by(Products.creationData.desc())
-
-    # if choice
-
     elif order=='1':
         items = Products.query.order_by(Products.name)
     elif order=='2':
@@ -198,19 +192,15 @@ def index():
     else:
         items = Products.query.order_by(Products.creationData.desc())
 
-
     if page and page.isdigit():
         page=int(page)
     else:
         page=1
         
-    # if search 
     data=request.form.get('search')
     if data is not None:
         items=Products.query.filter(Products.brand.contains(data) | Products.name.contains(data))
 
-
-    #add.item.to.cart.or.
     cartId=request.form.get('item_to_cart')
     if cartId is not None:
         item=Cart.query.filter_by(productid=cartId).first()
@@ -221,7 +211,6 @@ def index():
         else:
             number=int(item.quantity+1)
             item.quantity=number
-            # db.session.add(product)
             db.session.commit()
 
     pages=items.paginate(page=page,per_page=15)
@@ -233,10 +222,9 @@ def index():
     colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat,cartProduct=cartProduct)
 
 
-
-
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
+
 
 def add():
     name=Admin()
@@ -250,7 +238,6 @@ def add():
         aromat=request.form.get('aromat')
         price=request.form.get('price')
         alt=request.form.get('alt_txt')
-
         f=form.img.data
         fname=request.form.get('img_name')
         if f:
@@ -259,7 +246,6 @@ def add():
             size=480,480
             image = image.resize(size)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
-
 
         Authors='deft'
         content= request.form.get('content')
@@ -296,12 +282,12 @@ def register():
             db.session.add(user)
             db.session.commit()
         except:
-            db.session.add(user)
-            db.session.commit()
+            return redirect('/register')
         finally:
-            flash('Спасибо за регистрацию')
-            return redirect('/login')
+                flash('Спасибо за регистрацию','success')
+                return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form,search=search,admin=name)
+
 
 @app.route('/login',methods=['GET', 'POST'])
 def login():
@@ -314,12 +300,12 @@ def login():
         user = User.query.filter_by(email=form2.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form2.password.data):
             login_user(user, remember=form2.remember.data, duration=timedelta(days=5))
-            next_page = request.args.get('next') #################################################### nex_page in NOne
+            next_page = request.args.get('next')
             if next_page is None:
                 next_page='/'
             return redirect (next_page)
         else:
-            flash('Login Unsuccessful. Please check your email and password')
+            flash('Логин или пароль неверны','warning')
 
     return render_template('login.html', title='Вход', search=form, form2=form2,admin=name)
 
@@ -340,8 +326,6 @@ def removeTask():
     return redirect('/')
 
 
-
-
 @app.route('/show',methods=['GET', 'POST'])
 def show():
     form=Reviews()
@@ -353,40 +337,35 @@ def show():
     img=content.img
     revs1=request.form.get('Rev')
     otziv=Revs.query.filter_by(product_id=nameId).all()
-    #otziv=Revs.query.order_by(Revs.creationData.desc())
-    #print(revs1,user)
     user_id=current_user.get_id()
     cartProduct= Cart.query.filter_by(userid=user_id).count()
-
     if revies.validate_on_submit():
         time = datetime.now()
         author=current_user.username
         rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time,img=img)
         db.session.add(rev)
         db.session.commit()
-        return render_template('show.html', search=search,title=content.name,content=content,admin=name,
-                                form=form,x=otziv,cartProduct=cartProduct)
-    cartId=request.form.get('item_to_cart')
-    if cartId is not None:
-        item=Cart.query.filter_by(productid=cartId).first()
-        if item is None:
-            product=Cart(userid=user_id,productid=cartId,quantity=1)
-            db.session.add(product)
-            db.session.commit()
-        else:
-            number=int(item.quantity+1)
-            item.quantity=number
-            # db.session.add(product)
-            db.session.commit()
+        return redirect('/')
+    
     deletePost=request.form.get('deletePost')
     if deletePost is not None:
         rev=Revs.query.filter_by(id=deletePost).first()
         db.session.delete(rev)
         db.session.commit()
         return redirect ('/')
+    value=request.form.get('101')
+    print(value)
+    count=1
+    if value is not None:
+        if value=='5':
+            count=1
+        if value=='10':
+            count=2
+        if value=='20':
+            count=4
 
-
-    return render_template('show.html', search=search,title=content.name,content=content,admin=name,form=form,x=otziv,cartProduct=cartProduct)
+    return render_template('show.html', search=search,title=content.name,content=content,
+    admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count)
 
 
 @app.route('/profile',methods=['GET', 'POST'])
@@ -406,11 +385,12 @@ def profile():
     return render_template ('profile.html',admin=name,search=search,user=profileUser,otzivy=otzivy)
 
 
-
 @app.route('/cart',methods=['GET' ,'POST'])
 def cart():
     search=SearchForm()
     name=Admin()
+    userid=current_user.get_id()
+    time=datetime.now()
     if current_user.is_anonymous:
         return redirect('/login')
     user_id=current_user.get_id()
@@ -418,34 +398,51 @@ def cart():
     x=[]
     for i in cart:
         product=Products.query.filter_by(id=i.productid).first()
-        x.append(product)
-    # totalPrice=0
-    # for y in x:
-    #     totalPrice+=y.price
-    # print(totalPrice)
+        if product:
+            x.append(product)
+    totalPrice=0
+    discount=0
+    for y in x:
+        totalPrice+=y.price
+    summ=totalPrice
+
+    if totalPrice>5000:
+        discount=5
+        summ=int(summ-(summ/100*discount))
+
+    oders=request.form.get('oders')
+    if oders:
+        if oders=='True':
+            oder=Oders(product=x,rebate=discount,price=summ,user_id=userid,creationData=time)
+            db.session.add(oder)
+            db.session.commit()
+            flash('hello','success')
+            return redirect('/')
     deleteFromCart=request.form.get('deleteFromCart')
     if deleteFromCart is not None:
-        deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
-        db.session.delete(deletecart)
-        db.session.commit()
-        return redirect('/cart')
+        try:
+            deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
+            db.session.delete(deletecart)
+            db.session.commit()
+            return redirect('/cart')
+        except:
+             return redirect('/cart')
 
-    return render_template('cart.html',admin=name,search=search,items=x)
+    return render_template('cart.html',admin=name,search=search,items=x,totalPrice=totalPrice,discount=discount,summ=summ)
 
         
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
-    name=Admin()
-    name=name.name
-
+    nameAdmin=Admin()
+    name=nameAdmin.name
     art=Products.query.filter_by(id=request.args.get('id')).first()
 
     if current_user.username==name:
+        form = ProductsForm()
         search=SearchForm()
         time = datetime.now()
-        form = ProductsForm()
-
+        search=SearchForm()
         form.brand.data=art.brand
         form.name.data=art.name
         form.aromat.date=art.aromat
@@ -454,6 +451,7 @@ def edit():
         form.alt_txt.data=art.alt_txt
         form.img_name.data=art.img
         f=form.img.data
+        userid=current_user.get_id()
 
         if f:
             fname=request.form.get('img_name')
@@ -462,7 +460,6 @@ def edit():
             size=480,480
             image = image.resize(size)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
-
 
         if form.validate_on_submit():
             art.brand=request.form.get('brand')
@@ -473,7 +470,7 @@ def edit():
             art.img=request.form.get('img_name')
             art.content= request.form.get('content')
             art.Authors=name
-            art.userId=current_user.id
+            art.userId=userid
             art.creationData=time
             db.session.commit()
             return redirect('/')
@@ -481,7 +478,6 @@ def edit():
         return redirect('/')
 
     return render_template('edit.html', form=form,search=search,admin=name)
-
 
 
 if __name__ == '__main__':

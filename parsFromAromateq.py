@@ -33,12 +33,10 @@ def get_data(pages):
     for  ad in ads_block:
         brand= ad.find('span', class_='brand-name').text.strip()
         name=ad.find('div', class_='h2').text.strip() 
-        price=ad.find('span', class_='price').text.strip()
-        # price2=[]
-        # for i in price:
-        #     price2.append(i.isdigit)
-        # print(price2)
+        price=ad.find('span', class_='price').text.replace('грн','').split()
+        price1=''.join(price)
 
+        #print(int(price1))
         img=ad.find('div', class_='product-image').a.img['data-src'].strip()
         text=ad.find('span', class_='product-type').text.strip() 
 
@@ -46,14 +44,14 @@ def get_data(pages):
         Authors='deft'
         userId=1
 
-        # items = Products(brand=brand, Authors=Authors, name=name, price=price,
-        #             content=text, creationData=time,user_id=userId,
-        #             img=img,aromat=aromat)
-        # db.session.add(items)
-        # db.session.commit()
+        items = Products(brand=brand, Authors=Authors, name=name, price=int(price1),
+                    content=text, creationData=time,user_id=userId,
+                    img=img,aromat=aromat)
+        db.session.add(items)
+        db.session.commit()
 
-        #print(text)
-        #print(ref)
+    #     print(text)
+    #     print(ref)
     # print(ads_block)
     # print(len(ads_block)
 

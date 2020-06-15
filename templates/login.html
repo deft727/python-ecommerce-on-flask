@@ -6,65 +6,68 @@
 
 {% endblock %}
 
-{%block content%}
-<body style="">
 
+{% block body %}
 
 
 <!-- ========================= SECTION CONTENT ========================= -->
-<section class="section-conten padding-y" style="min-height:84vh">
 
 <!-- ============================ COMPONENT LOGIN   ================================= -->
-	<div class="card mx-auto" style="max-width: 380px; margin-top:100px;">
-      <div class="card-body">
-      <h4 class="card-title mb-4">Вход</h4>
-	  <form method="POST" action="" enctype="multipart/form-data">
-		{{ form2.hidden_tag() }}
 
-		<div class="form-group">
-			{{ form2.email.label }}
 
-			{% if form2.email.errors %}
-			{{ form2.email}}
-					{% for error in form2.email.errors %}
-						<span>{{ error }}</span>
-					{% endfor %}
-				
-			{% else %}
-				{{ form2.email(class="form-control form-control-lg") }}
-			{% endif %}
-		</div>
-		<div class="form-group">
-			{{ form2.password.label(class="form-control-label") }}
+		<div class="card mx-auto" style="max-width: 450px; margin-top:100px;margin-bottom: 100px;">
 
-			{% if form2.password.errors %}
-				{{ form2.password(class="form-control form-control-lg is-invalid") }}
-					{% for error in form2.password.errors %}
-						<span>{{ error }}</span>
-					{% endfor %}
-			{% else %}
-				{{ form2.password(class="form-control form-control-lg") }}
-			{% endif %}
-		</div>
-		<div class="form-check">
-			{{ form2.remember(class="form-check-input") }}
-			{{ form2.remember.label(class="form-check-label") }}
-		</div>
-          
-          <div class="form-group">
-          	<a href="#" class="float-right">Forgot password?</a> 
-            
-          </div> <!-- form-group form-check .// -->
-          <div class="form-group">
-              <button type="submit" class="btn btn-primary btn-block"> Login  </button>
-          </div> <!-- form-group// -->    
-      </form>
-      </div> <!-- card-body.// -->
-    </div> <!-- card .// -->
+			<div class="content-section">
+				<form method="POST" action="">
+					{{ form2.hidden_tag() }}
+					<fieldset class="form-group">
+						<legend class="border-bottom mb-4">Войти</legend>
+						<div class="form-group">
+							{{ form2.email.label(class="form-control-label") }}
+							{% if form2.email.errors %}
+								{{ form2.email(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in form2.email.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ form2.email(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+						<div class="form-group">
+							{{ form2.password.label(class="form-control-label") }}
+							{% if form2.password.errors %}
+								{{ form.password(class="form-control form-control-lg is-invalid") }}
+								<div class="invalid-feedback">
+									{% for error in form2.password.errors %}
+										<span>{{ error }}</span>
+									{% endfor %}
+								</div>
+							{% else %}
+								{{ form2.password(class="form-control form-control-lg") }}
+							{% endif %}
+						</div>
+						<div class="pull-right">
+							{{ form2.remember(class="form-check-input") }}
+							{{ form2.remember.label(class="form-check-label") }}
+						</div>
+					</fieldset>
+					<div class="pull-right" >
+						{{ form2.submit(class="btn btn-outline-info") }}
+					</div>
+					<small class="text-muted ml-2">
+						<a href="#">Забыли пароль?</a>
+					</small>
+				</form>
+			</div>
+			<div class="border-top pt-3">
+				<small class="text-muted">
+					Нет аккаунта? <a class="ml-2" href="/register">Регистрация</a>
+				</small>
+			</div>		</div>
 
-     <p class="text-center mt-4">Don't have account? <a href="#">Sign up</a></p>
-     <br><br>
+
+	 
 <!-- ============================ COMPONENT LOGIN  END.// ================================= -->
-
-
 {% endblock %}
