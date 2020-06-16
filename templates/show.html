@@ -75,19 +75,20 @@
 
             <form action="/show?id={{content.id}}" method="POST" >
               <!-- Default input -->
-              <form action="/cart" method="POST" name="10">
+              <form action="" method="POST" name="10">
 
               <div class="btn-group">
                 <button type="button"   class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  5 мл
+                  {{valuecount}} мл
                 </button>
                 <div class="dropdown-menu">
                   <button class="dropdown-item"  name='10' value='5'>5 мл</button> 
                   <button class="dropdown-item"  name='10' value='10'>10 мл</button> 
+                  <button class="dropdown-item"  name='10' value='15'>15 мл</button> 
                   <button class="dropdown-item" name='10' value='20'>20 мл</button>
               </div> 
               
-              <button name="item_to_cart" name="101" value={{content.id}} class="btn btn-primary">Добавить
+              <button name='add_to_cart' value={{count}} class="btn btn-primary">Добавить
                  <i class="fas fa-shopping-cart ml-1"></i>
               </button>
 

@@ -54,14 +54,23 @@
 			
 		</figure>
 	</td>
-	<td> 
-		<select class="form-control">
-			<option value="2">1</option>
-			<option value="2">2</option>
-			<option value="2">3</option>	
-			<option value="2">4</option>	
-		</select> </form>
-	</td>
+	<td> 	<form action="" method="POST" name="VALUE">
+		<div class="dropdown">
+			<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+			  Dropdown button
+			</button>
+			<div class="dropdown-menu">
+			  <button class="dropdown-item" name="VALUE" value="1" >5 мл</button>
+			  <button class="dropdown-item" name="VALUE" value="2" >10 мл</button>
+			  <button class="dropdown-item" name="VALUE" value="3" >15 мл</button>
+			  <button class="dropdown-item" name="VALUE" value="4" >20 мл</button>
+
+			</div>
+		  </div>
+			
+	</form>
+	</td>	
+
 	<td> 
 		<div class="price-wrap"> 
 			<var class="price"> {{i.price}} грн</var> 

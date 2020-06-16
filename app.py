@@ -202,6 +202,10 @@ def index():
         items=Products.query.filter(Products.brand.contains(data) | Products.name.contains(data))
 
     cartId=request.form.get('item_to_cart')
+###########################################
+    if cartId and current_user.is_anonymous:
+        return redirect('/login')
+###########################################
     if cartId is not None:
         item=Cart.query.filter_by(productid=cartId).first()
         if item is None:
@@ -210,6 +214,8 @@ def index():
             db.session.commit()
         else:
             number=int(item.quantity+1)
+            if number>4:
+                return redirect('/')
             item.quantity=number
             db.session.commit()
 
@@ -353,19 +359,43 @@ def show():
         db.session.delete(rev)
         db.session.commit()
         return redirect ('/')
-    value=request.form.get('101')
-    print(value)
+    value=request.form.get('10')
+    valuecount=5
     count=1
+    addtocart=request.form.get('add_to_cart')
     if value is not None:
         if value=='5':
+            valuecount=5
             count=1
         if value=='10':
+            valuecount=10
             count=2
+        if value=='15':
+            valuecount=15
+            count=3
         if value=='20':
+            valuecount=20
             count=4
+    if  addtocart:
+        sale=Cart.query.filter_by(productid=nameId).first()
+
+        if sale is None:
+            s=Cart(userid=user_id,productid=nameId,quantity=addtocart)
+
+            try:
+                db.session.add(s)
+                db.session.commit()
+            finally:
+                flash('Товар успешно добавлен в корзину','success')
+                return redirect('/')
+        else:
+             sale.quantity=addtocart
+             db.session.commit()
+             flash('Товар успешно добавлен в корзину','success')
+             return redirect('/')
 
     return render_template('show.html', search=search,title=content.name,content=content,
-    admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count)
+    admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount)
 
 
 @app.route('/profile',methods=['GET', 'POST'])
@@ -395,6 +425,8 @@ def cart():
         return redirect('/login')
     user_id=current_user.get_id()
     cart=Cart.query.filter_by(userid=user_id).all()
+    value=request.form.get("VALUE")
+    print(value)
     x=[]
     for i in cart:
         product=Products.query.filter_by(id=i.productid).first()
@@ -428,7 +460,8 @@ def cart():
         except:
              return redirect('/cart')
 
-    return render_template('cart.html',admin=name,search=search,items=x,totalPrice=totalPrice,discount=discount,summ=summ)
+    return render_template('cart.html',admin=name,search=search,items=x,totalPrice=totalPrice,
+    discount=discount,summ=summ)
 
         
 @app.route('/edit', methods=['GET', 'POST'])
