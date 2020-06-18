@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 
 {% block title %}
-
-
+{{title}}
 {% endblock %}
-
-{%block content%}{%endblock%}	
 
 {% block cart %}{{cartProduct}} {%endblock%}
 
+{%block content%}{%endblock%}	
 
 {% block body %}
 
@@ -71,7 +69,7 @@
                 <span  class="display-4"  >{{content.price}} грн</span>
                 {%endif%}
 
-            <p class="mytxt">{{content.content}}</p>
+            <p class="mytxt">{{content.characteristics}}</p>
 
             <form action="/show?id={{content.id}}" method="POST" >
               <!-- Default input -->
@@ -81,7 +79,7 @@
                 <button type="button"   class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {{valuecount}} мл
                 </button>
-                <div class="dropdown-menu">
+                <div class="dropdown-menu" >
                   <button class="dropdown-item"  name='10' value='5'>5 мл</button> 
                   <button class="dropdown-item"  name='10' value='10'>10 мл</button> 
                   <button class="dropdown-item"  name='10' value='15'>15 мл</button> 
@@ -97,18 +95,23 @@
    
                 </div>
               </div>
-            <table class="table">
-              <thead>
-                <tr>
-                  <td>@tw127.0.0.1 - - [12/Jun/2020 14:21:24] "GET /favicon.ico HTTP/1.1" 200 -
-                    127.0.0.1 - - [12/Jun/2020 14:21:40] "GET /show?id=2 HTTP/1.1" 200 -
-                    127.0.0.1 - - [12/Jun/2020 14:21:41] "GET /examples/vendors/jquery/jquery-3.3.1.min.js HTTP/1.1" 200 -
-                    127.0.0.1 - - [12/Jun/2020 14:21:41] "GET /examples/vendors/bootstrap-4.1/css/bootstrap.min.css HTTP/1.1" 200 -
-                    127.0.0.1 - - [12/Jun/2020 14:21:41] "GET /examples/vendors/popper.js/popper.min.js HTTP/1.1" 200 -
-                    127.0.0.1 - - [12/Jun/2020 14:21:41] "GET /examples/vendors/bootstrap-4.1/js/bootstrap.min.js HTTP/1.1" 200 -
-                    127.0.0.1 - - [12/Jun/2020 14:21:41] "GET /favicon.ico HTTP/1.1" 200 -
-                    itter</td>
+      
+
+
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Описание:</th>
                   </tr>
+                </thead>
+                <tbody>
+                 
+                  <tr>
+                    
+                     <td> {{content.content}} </td>
+          
+                  </tr>
+                </tbody>
               </table>
           <!--Content-->
 

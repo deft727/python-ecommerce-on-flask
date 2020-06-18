@@ -56,15 +56,15 @@ class Products(db.Model):
     price=  db.Column(db.Integer, nullable=False)
     aromat=db.Column(db.String(150), nullable=True)
     content = db.Column(db.Text, nullable=False)
+    characteristics=db.Column(db.Text, nullable=False)
     alt_txt=db.Column(db.String(250), nullable=True)
     creationData = db.Column(db.DateTime)
     img=db.Column(db.String(248), nullable=True)
     user_id = db.Column(db.Integer, nullable=False)
     otzivy2= db.relationship('Revs',backref='Products',lazy='dynamic')
 
-
     def __repr__(self):
-        return f'<Article{self.content}>'
+        return f'<Products{self.content}>'
 
 
 class RegistrationForm(FlaskForm):
@@ -87,6 +87,20 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('Такой e-mail уже существует')
 
+    def validate_phone(self, phone):
+        user = User.query.filter_by(phone=phone.data).first()
+        if user:
+            raise ValidationError('Такой номер телефона уже существует')
+
+
+class EditProfileForm(FlaskForm):
+    username = StringField('Имя', validators=[DataRequired(), Length(min=4)])
+    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
+    city = StringField('Город', validators=[DataRequired()])
+    otdel=StringField('Отделение', validators=[DataRequired()])
+    phone = TelField('Телефон')
+    submit = SubmitField('Изменить')
+
   
 class LoginForm(FlaskForm):
     email = StringField('Электроная почта', validators=[DataRequired(), Email()])
@@ -96,10 +110,11 @@ class LoginForm(FlaskForm):
 
 
 class ProductsForm(FlaskForm):
-    brand=StringField('Брэнд', validators=[DataRequired()])
+    brand=StringField('Бренд', validators=[DataRequired()])
     name = StringField('Название', validators=[DataRequired()])
     aromat= StringField('Тип аромата', validators=[DataRequired()])
     content = StringField(u'описание', widget=TextArea(),validators=[DataRequired()])
+    characteristics = StringField(u'характеристики', widget=TextArea(),validators=[DataRequired()])
     price = IntegerField('Цена', validators=[DataRequired()])
     alt_txt=StringField('Альтернативный текст', validators=[DataRequired()])
     img=  FileField()
@@ -210,14 +225,20 @@ def index():
         item=Cart.query.filter_by(productid=cartId).first()
         if item is None:
             product=Cart(userid=user_id,productid=cartId,quantity=1)
-            db.session.add(product)
-            db.session.commit()
+            try:
+                db.session.add(product)
+                db.session.commit()
+            except:
+                return redirect ('/')
         else:
             number=int(item.quantity+1)
             if number>4:
                 return redirect('/')
             item.quantity=number
-            db.session.commit()
+            try:
+                db.session.commit()
+            except:
+                return redirect ('/')
 
     pages=items.paginate(page=page,per_page=15)
     colvo= items.count()
@@ -230,8 +251,6 @@ def index():
 
 @app.route('/add', methods=['GET', 'POST'])
 @login_required
-
-
 def add():
     name=Admin()
     name=name.name
@@ -255,14 +274,18 @@ def add():
 
         Authors='deft'
         content= request.form.get('content')
+        characteristics= request.form.get('characteristics')
         userId=1
         if form.validate_on_submit():
             items = Products(brand=brand, Authors=Authors, name=name, price=price,
-                            content=content, creationData=time,user_id=userId,
+                            content=content,characteristics=characteristics, creationData=time,user_id=userId,
                             alt_txt=alt,img=fname,aromat=aromat)
-            db.session.add(items)
-            db.session.commit()
-            return redirect('/')
+            try:
+                db.session.add(items)
+                db.session.commit()
+                return redirect('/')
+            except:
+                return redirect ('/')
     else:
         return redirect('/')
 
@@ -287,11 +310,11 @@ def register():
         try:
             db.session.add(user)
             db.session.commit()
+            flash('Спасибо за регистрацию','success')
+            return redirect('/login')
         except:
             return redirect('/register')
-        finally:
-                flash('Спасибо за регистрацию','success')
-                return redirect('/login')
+
     return render_template('register.html', title='Регистрация', form=form,search=search,admin=name)
 
 
@@ -327,9 +350,12 @@ def logout():
 def removeTask():
     productId = request.args.get('id')
     art= Products.query.filter_by(id=productId).first()
-    db.session.delete(art)
-    db.session.commit()
-    return redirect('/')
+    try:
+        db.session.delete(art)
+        db.session.commit()
+        return redirect('/')
+    except:
+        return redirect ('/')
 
 
 @app.route('/show',methods=['GET', 'POST'])
@@ -349,16 +375,22 @@ def show():
         time = datetime.now()
         author=current_user.username
         rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time,img=img)
-        db.session.add(rev)
-        db.session.commit()
-        return redirect('/')
+        try:
+            db.session.add(rev)
+            db.session.commit()
+            return redirect('/')
+        except:
+            return redirect ('/')
     
     deletePost=request.form.get('deletePost')
     if deletePost is not None:
         rev=Revs.query.filter_by(id=deletePost).first()
-        db.session.delete(rev)
-        db.session.commit()
-        return redirect ('/')
+        try:
+            db.session.delete(rev)
+            db.session.commit()
+            return redirect ('/')
+        except:
+            return redirect ('/')
     value=request.form.get('10')
     valuecount=5
     count=1
@@ -389,11 +421,13 @@ def show():
                 flash('Товар успешно добавлен в корзину','success')
                 return redirect('/')
         else:
-             sale.quantity=addtocart
-             db.session.commit()
-             flash('Товар успешно добавлен в корзину','success')
-             return redirect('/')
-
+            sale.quantity=addtocart
+            try:
+                db.session.commit()
+                flash('Товар успешно добавлен в корзину','success')
+                return redirect('/')
+            except:
+                return redirect ('/')
     return render_template('show.html', search=search,title=content.name,content=content,
     admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount)
 
@@ -408,9 +442,12 @@ def profile():
     idREv=request.form.get('delete')
     if idREv is not None:
         rev=Revs.query.filter_by(id=idREv).first()
-        db.session.delete(rev)
-        db.session.commit()
-        return redirect ('/profile')
+        try:
+            db.session.delete(rev)
+            db.session.commit()
+            return redirect ('/profile')
+        except:
+            return redirect ('/profile')
 
     return render_template ('profile.html',admin=name,search=search,user=profileUser,otzivy=otzivy)
 
@@ -425,18 +462,29 @@ def cart():
         return redirect('/login')
     user_id=current_user.get_id()
     cart=Cart.query.filter_by(userid=user_id).all()
+
     value=request.form.get("VALUE")
     print(value)
+    quantity=[]
+    print(quantity)
     x=[]
+    print(x)
     for i in cart:
         product=Products.query.filter_by(id=i.productid).first()
+        s=i.quantity
         if product:
+            quantity=[]
             x.append(product)
+            quantity.append(s)
+            x.insert(quantity)
+            print(quantity)
+
+
     totalPrice=0
     discount=0
     for y in x:
         totalPrice+=y.price
-    summ=totalPrice
+        summ=totalPrice
 
     if totalPrice>5000:
         discount=5
@@ -446,14 +494,17 @@ def cart():
     if oders:
         if oders=='True':
             oder=Oders(product=x,rebate=discount,price=summ,user_id=userid,creationData=time)
-            db.session.add(oder)
-            db.session.commit()
-            flash('hello','success')
-            return redirect('/')
+            try:
+                db.session.add(oder)
+                db.session.commit()
+                flash('hello','success')
+                return redirect('/')
+            except:
+                return redirect ('/')
     deleteFromCart=request.form.get('deleteFromCart')
     if deleteFromCart is not None:
+        deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
         try:
-            deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
             db.session.delete(deletecart)
             db.session.commit()
             return redirect('/cart')
@@ -461,7 +512,7 @@ def cart():
              return redirect('/cart')
 
     return render_template('cart.html',admin=name,search=search,items=x,totalPrice=totalPrice,
-    discount=discount,summ=summ)
+    discount=discount,summ=summ,quantity=quantity)
 
         
 @app.route('/edit', methods=['GET', 'POST'])
@@ -470,12 +521,10 @@ def edit():
     nameAdmin=Admin()
     name=nameAdmin.name
     art=Products.query.filter_by(id=request.args.get('id')).first()
+    time = datetime.now()
 
     if current_user.username==name:
-        form = ProductsForm()
-        search=SearchForm()
-        time = datetime.now()
-        search=SearchForm()
+        form = RegistrationForm()
         form.brand.data=art.brand
         form.name.data=art.name
         form.aromat.date=art.aromat
@@ -485,6 +534,7 @@ def edit():
         form.img_name.data=art.img
         f=form.img.data
         userid=current_user.get_id()
+        characteristics=art.characteristics
 
         if f:
             fname=request.form.get('img_name')
@@ -501,17 +551,49 @@ def edit():
             art.price=request.form.get('price')
             art.alt=request.form.get('alt_txt')
             art.img=request.form.get('img_name')
+            art.characteristics=request.form.get('characteristics')
             art.content= request.form.get('content')
             art.Authors=name
             art.userId=userid
             art.creationData=time
-            db.session.commit()
-            return redirect('/')
+            try:
+                db.session.commit()
+                return redirect('/')
+            except:
+                return redirect('/')
+
     else:
         return redirect('/')
 
     return render_template('edit.html', form=form,search=search,admin=name)
 
+
+@app.route('/edit-profile/<int:id>',methods=['GET', 'POST'])
+def edit_profile(id):
+    search=SearchForm()
+    name=Admin()
+    form=EditProfileForm()
+    profile=User.query.filter_by(id=id).first()
+    if profile:
+        form.username.data=profile.username
+        form.email.data=profile.email
+        form.city.data=profile.city
+        form.otdel.data=profile.otdel
+        form.phone.data=profile.phone
+        if form.validate_on_submit():
+            print('formvalidate')
+            profile.username=request.form.get('username')
+            x=request.form.get('username')
+            print(profile.username,x)
+            profile.email=request.form.get('email')
+            profile.city=request.form.get('city')
+            profile.otdel=request.form.get('otdel')
+            profile.phone=request.form.get('phone')
+            db.session.commit()
+            flash('Ваши изменения были сохранены','success')
+            return redirect('/')
+
+    return render_template('edit-profile.html', form=form,search=search,admin=name)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -43,9 +43,9 @@ def get_data(pages):
         aromat='Древесный'
         Authors='deft'
         userId=1
-
+        characteristics='characteristic characteristics characteristics characteristics characteristics characteristics  scharacteristics'
         items = Products(brand=brand, Authors=Authors, name=name, price=int(price1),
-                    content=text, creationData=time,user_id=userId,
+                    content=text,characteristics=characteristics, creationData=time,user_id=userId,
                     img=img,aromat=aromat)
         db.session.add(items)
         db.session.commit()

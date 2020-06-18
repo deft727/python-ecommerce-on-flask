@@ -116,7 +116,7 @@
 
 <div class="row"  >
 	{%for item in pages.items%}
-	<a href="/show?id={{ item.id}}">
+	<a href="/show?id={{item.id}}">
 	<div class="col-md-4" >
 		<figure class="card card-product-grid" >
 			<div class="img-wrap" >
@@ -148,21 +148,11 @@
 				<form action="" method="POST">
 
 				
-			
 			</figcaption> <button name="item_to_cart" value={{item.id}} class="btn btn-outline-success">Добавить</button>	</form>
-
-
 		</figure>
-
 	</div>	
-
-
-
-
 	{% endfor %}
 	</div>	
-
-
 	<nav aria-label="Page navigation example">
 		<ul class="pagination">
 		  <li class="page-item">
@@ -170,8 +160,7 @@
 			  <span aria-hidden="true">&laquo;</span>
 			  <span class="sr-only">Previous</span>
 			</a>
-		  </li>
-	  
+		  </li>	  
 		  {%for page in pages.iter_pages() %} 
 		  {%if page %}
 		  <li class="active"><a class="page-link" href="./?page={{page}}">{{page}}</a></li>
