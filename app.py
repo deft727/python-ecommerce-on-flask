@@ -163,11 +163,12 @@ class Cart(db.Model):
 
 class Oders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    product = db.Column(db.String(350), nullable=False)
+    productid = db.Column(db.Integer, nullable=False)
     rebate = db.Column(db.Integer, nullable=False)    
     price=db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     creationData = db.Column(db.DateTime)
+    quantity=db.Column(db.Integer, nullable=False)
 
 
 @app.errorhandler(404)
@@ -218,9 +219,18 @@ def index():
 
     cartId=request.form.get('item_to_cart')
 ###########################################
+
+
+
+# как отслеживать не зарегестрированых пользователей ?
+
+
     if cartId and current_user.is_anonymous:
         return redirect('/login')
 ###########################################
+
+
+
     if cartId is not None:
         item=Cart.query.filter_by(productid=cartId).first()
         if item is None:
@@ -301,7 +311,6 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        #print(hashed_password)
         city=form.city.data
         otdel=form.otdel.data
         phone=form.phone.data
@@ -464,43 +473,65 @@ def cart():
     cart=Cart.query.filter_by(userid=user_id).all()
 
     value=request.form.get("VALUE")
-    print(value)
-    quantity=[]
-    print(quantity)
+
+    print(value1)
+    # quantity=[]
+    # print(quantity)
     x=[]
-    print(x)
+    #s=[]
+
+
+
+
+
+
+    # как добавлять колво товара из корзины к 'x' или как связать таблицы ?
+
+
+
+
     for i in cart:
         product=Products.query.filter_by(id=i.productid).first()
-        s=i.quantity
         if product:
-            quantity=[]
+            #s.append(i.quantity)
             x.append(product)
-            quantity.append(s)
-            x.insert(quantity)
-            print(quantity)
+
 
 
     totalPrice=0
     discount=0
     for y in x:
         totalPrice+=y.price
-        summ=totalPrice
+    summ=totalPrice
 
     if totalPrice>5000:
         discount=5
         summ=int(summ-(summ/100*discount))
 
+
+
+
+
+# как когда принимаю значение по value  привязать его к ид товара и добавить в таблицу ?
+
+
+
+
+
+
+    value=request.form.get("VALUE")
     oders=request.form.get('oders')
     if oders:
-        if oders=='True':
-            oder=Oders(product=x,rebate=discount,price=summ,user_id=userid,creationData=time)
-            try:
-                db.session.add(oder)
-                db.session.commit()
-                flash('hello','success')
-                return redirect('/')
-            except:
-                return redirect ('/')
+            for i in x:
+                oder=Oders(productid=i.id,rebate=discount,price=summ,user_id=userid,creationData=time,quantity=1)
+                try:
+                    db.session.add(oder)
+                    db.session.commit()
+                    flash('Спасибо за покупку','success')
+                    return redirect('cart')
+                except:
+                    return redirect ('/cart')
+                
     deleteFromCart=request.form.get('deleteFromCart')
     if deleteFromCart is not None:
         deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
@@ -512,7 +543,7 @@ def cart():
              return redirect('/cart')
 
     return render_template('cart.html',admin=name,search=search,items=x,totalPrice=totalPrice,
-    discount=discount,summ=summ,quantity=quantity)
+    discount=discount,summ=summ)
 
         
 @app.route('/edit', methods=['GET', 'POST'])
