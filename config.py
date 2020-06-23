@@ -7,13 +7,15 @@ class MConfig :
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    MAIL_SERVER =  'smtp.gmail.com'
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True 
-    MAIL_USERNAME = 'zarj09'
+    MAIL_SERVER = 'smtp.googlemail.com'
+    MAIL_PORT = 465
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
+    ADMINS = ['zarj09@gmail.com']
+    MAIL_USERNAME = 'zarj09@gmail.com'
+    MAIL_DEFAULT_SENDER = 'zarj09@gmail.com'
     MAIL_PASSWORD = 'Kirill99121'
 
     MY_KEY = 1234
     SUPERUSER = 'root'
     PICS_FOLDER = "/static/images"
-    

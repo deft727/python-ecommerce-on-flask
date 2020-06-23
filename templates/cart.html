@@ -4,6 +4,8 @@
 
 {% endblock %}
 
+{% block cart %}{{cartProduct}}{%endblock%}
+
 {%block content%}
 
 {%endblock%}	
@@ -45,25 +47,26 @@
 <tr>
 	<td>
 		<figure class="itemside">
-			<div class="aside"><img src={{i.img}} class="img-sm"></div>
+			<div class="aside"><img src={{i.prods.img}} class="img-sm"></div>
 			<figcaption class="info">
-				<a href="/show?id={{i.id}}" class="title text-dark">{{i.brand}}</a>
-				<p class="text-muted small">{{i.name}}</p>
+				<a href="/show?id={{i.prods.id}}" class="title text-dark">{{i.prods.brand}}</a>
+				<p class="text-muted small">{{i.prods.name}}</p>
 			</figcaption>
 			
 		</figure>
 	</td>
 	<td> 	
+		
 		<form action="" method="POST" name="VALUE">
 		<div class="dropdown">
 			<button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-			  Dropdown button
+			  {{i.quantity*5}} мл
 			</button>
 			<div class="dropdown-menu">
-			  <button class="dropdown-item" name="VALUE" value="1" >5 мл</button>
-			  <button class="dropdown-item" name="VALUE" value="2" >10 мл</button>
-			  <button class="dropdown-item" name="VALUE" value="3" >15 мл</button>
-			  <button class="dropdown-item" name="VALUE" value="4" >20 мл</button>
+			  <button class="dropdown-item" name="VALUE" value="{{i.productid}}/1" >5 мл</button>
+			  <button class="dropdown-item" name="VALUE" value="{{i.productid}}/2" >10 мл</button>
+			  <button class="dropdown-item" name="VALUE" value="{{i.productid}}/3" >15 мл</button>
+			  <button class="dropdown-item" name="VALUE" value="{{i.productid}}/4" >20 мл</button>
 
 			</div>
 		  </div>
@@ -73,18 +76,18 @@
 
 	<td> 
 		<div class="price-wrap"> 
-			<var class="price"> {{i.price}} грн</var> 
+			<var class="price"> {{i.prods.price*i.quantity}} грн</var> 
 		</div> <!-- price-wrap .// -->
 	</td>
 	
 	<form action="" method="POST" name="deleteFromCart">
 
 	<td class="text-right"> 
-	<button  class="btn btn-light"  name="deleteFromCart" value="{{i.id}}"> Удалить </button>
+	<button  class="btn btn-light"  name="deleteFromCart" value="{{i.prods.id}}"> Удалить </button>
 	</td>
 </tr></form>
 
-</tbody>{%endfor%}
+</tbody>
 </table>
 <form action="" method="POST" name="oders">
 
@@ -103,7 +106,7 @@
 			<div class="card-body">
 					<dl class="dlist-align">
 					  <dt>Общая сумма:</dt>
-					  <dd class="text-right" >{{totalPrice}} грн</dd>
+					  <dd class="text-right" >{{totalPrice*i.quantity}} грн</dd>
 					</dl>
 					<dl class="dlist-align">
 					  <dt>Скидка:</dt>
@@ -112,10 +115,10 @@
 					
 					<dl class="dlist-align">
 						<dt>Всего:</dt>
-					<dd class="text-right  h5" name="oders" value='{{totalPrice}}'><b>{{summ}} грн</b></dd>
+					<dd class="text-right  h5" name="oders" value='{{totalPrice}}'><b>{{summ*i.quantity}} грн</b></dd>
 					</dl>
-
 				</form>
+				{%endfor%}
 
 					<hr>
 					<p class="text-center mb-3">

@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect, flash, url_for, session
+from flask import Flask, render_template, request, redirect, flash, url_for, session 
+from flask_mail import Message,Mail
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, ValidationError, FileField,IntegerField,SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
@@ -22,6 +23,7 @@ app.config.from_object(MConfig)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
+mail = Mail(app)
 app.config['UPLOAD_FOLDER'] = ".\static\images"
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -38,7 +40,7 @@ class User(db.Model, UserMixin):
     otdel=db.Column(db.String(60), nullable=False)
     phone = db.Column(db.Integer, nullable=False)
     otzivy= db.relationship('Revs',backref='User',lazy='dynamic')
-
+    
     def __repr__(self):
         return f"User('{self.username}' - '{self.email}')"
 
@@ -61,7 +63,7 @@ class Products(db.Model):
     creationData = db.Column(db.DateTime)
     img=db.Column(db.String(248), nullable=True)
     user_id = db.Column(db.Integer, nullable=False)
-    otzivy2= db.relationship('Revs',backref='Products',lazy='dynamic')
+    otzivy2= db.relationship('Revs',backref='Products',lazy=True)
 
     def __repr__(self):
         return f'<Products{self.content}>'
@@ -156,6 +158,7 @@ class Cart(db.Model):
     userid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, primary_key=True)
     productid = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
+    prods = db.relationship('Products',backref='Products',lazy=True)
 
     def __repr__(self):
         return f"Cart('{self.userid}', '{self.productid}, '{self.quantity}')"
@@ -316,13 +319,12 @@ def register():
         phone=form.phone.data
         user = User(username=form.username.data, email=form.email.data,
                     password=hashed_password,city=city,otdel=otdel,phone=phone)
-        try:
-            db.session.add(user)
-            db.session.commit()
-            flash('Спасибо за регистрацию','success')
-            return redirect('/login')
-        except:
-            return redirect('/register')
+        
+        db.session.add(user)
+        db.session.commit()
+        flash('Спасибо за регистрацию','success')
+        return redirect('/login')
+
 
     return render_template('register.html', title='Регистрация', form=form,search=search,admin=name)
 
@@ -465,69 +467,51 @@ def profile():
 def cart():
     search=SearchForm()
     name=Admin()
-    userid=current_user.get_id()
     time=datetime.now()
     if current_user.is_anonymous:
         return redirect('/login')
     user_id=current_user.get_id()
     cart=Cart.query.filter_by(userid=user_id).all()
+    cartProduct= Cart.query.filter_by(userid=user_id).count()
 
     value=request.form.get("VALUE")
-
-    print(value1)
-    # quantity=[]
-    # print(quantity)
-    x=[]
-    #s=[]
-
-
-
-
-
-
-    # как добавлять колво товара из корзины к 'x' или как связать таблицы ?
-
-
-
-
-    for i in cart:
-        product=Products.query.filter_by(id=i.productid).first()
-        if product:
-            #s.append(i.quantity)
-            x.append(product)
-
-
-
+ 
     totalPrice=0
     discount=0
-    for y in x:
-        totalPrice+=y.price
+    for y in cart:
+        totalPrice+=y.prods.price
     summ=totalPrice
 
-    if totalPrice>5000:
+    if totalPrice>1500:
         discount=5
         summ=int(summ-(summ/100*discount))
 
-
-
-
-
-# как когда принимаю значение по value  привязать его к ид товара и добавить в таблицу ?
-
-
-
-
-
-
     value=request.form.get("VALUE")
+    if value:
+        idtovara=int(value[0])
+        quantity=int(value[2])
+        tovar=Cart.query.filter_by(productid=idtovara).first()
+        tovar.quantity=quantity
+        db.session.commit()
+    
     oders=request.form.get('oders')
     if oders:
-            for i in x:
-                oder=Oders(productid=i.id,rebate=discount,price=summ,user_id=userid,creationData=time,quantity=1)
+            for i in cart:
+                oder=Oders(productid=i.productid,rebate=discount,price=summ*i.quantity,user_id=user_id,creationData=time,quantity=i.quantity)
                 try:
                     db.session.add(oder)
                     db.session.commit()
                     flash('Спасибо за покупку','success')
+                    user=User.query.filter_by(id=user_id).first()
+                    msg = Message("Сделан заказ ",
+                    sender="deft727@gmail.com",
+                    recipients=["zarj09@gmail.com"])
+                    msg.html = "<b>пользователем </b>"+ user.username+ time.ctime()+"юзер ид="
+                    mail.send(msg)
+
+#### №№№№№№№№№№№№№№№№№№№№№      как удалить заказы после заказа?
+
+
                     return redirect('cart')
                 except:
                     return redirect ('/cart')
@@ -542,8 +526,8 @@ def cart():
         except:
              return redirect('/cart')
 
-    return render_template('cart.html',admin=name,search=search,items=x,totalPrice=totalPrice,
-    discount=discount,summ=summ)
+    return render_template('cart.html',admin=name,search=search,items=cart,totalPrice=totalPrice,
+    discount=discount,summ=summ,cartProduct=cartProduct)
 
         
 @app.route('/edit', methods=['GET', 'POST'])
@@ -596,15 +580,16 @@ def edit():
     else:
         return redirect('/')
 
-    return render_template('edit.html', form=form,search=search,admin=name)
+    return render_template('edit.html', form=form,search=search,admin=name,title='edit profile')
 
 
-@app.route('/edit-profile/<int:id>',methods=['GET', 'POST'])
-def edit_profile(id):
+@app.route('/edit-profile', methods=['GET', 'POST'])
+def edit_profile():
     search=SearchForm()
     name=Admin()
     form=EditProfileForm()
-    profile=User.query.filter_by(id=id).first()
+    iduser=current_user.get_id()
+    profile=User.query.filter_by(id=iduser).first()
     if profile:
         form.username.data=profile.username
         form.email.data=profile.email
@@ -612,10 +597,8 @@ def edit_profile(id):
         form.otdel.data=profile.otdel
         form.phone.data=profile.phone
         if form.validate_on_submit():
-            print('formvalidate')
             profile.username=request.form.get('username')
             x=request.form.get('username')
-            print(profile.username,x)
             profile.email=request.form.get('email')
             profile.city=request.form.get('city')
             profile.otdel=request.form.get('otdel')
@@ -624,7 +607,7 @@ def edit_profile(id):
             flash('Ваши изменения были сохранены','success')
             return redirect('/')
 
-    return render_template('edit-profile.html', form=form,search=search,admin=name)
+    return render_template('edit-profile.html', form=form,search=search,admin=name,title='edit profile')
 
 if __name__ == '__main__':
     app.run(debug=True)
