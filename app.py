@@ -585,6 +585,7 @@ def edit():
 
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
+@login_required
 def edit_profile():
     search=SearchForm()
     name=Admin()
