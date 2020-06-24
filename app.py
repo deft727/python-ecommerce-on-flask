@@ -390,7 +390,7 @@ def show():
         try:
             db.session.add(rev)
             db.session.commit()
-            flash('коментарий добавлен','success')
+            flash('Отзыв добавлен','success')
             return redirect(url_for('show', id=nameId))
         except:
             return redirect ('/')
@@ -504,14 +504,9 @@ def cart():
                     db.session.add(oder)
                     db.session.commit()
                     flash('Спасибо за покупку','success')
-                    ######################################
-                    user=Oders.query.filter_by(id=user_id).first()
-                    msg = Message("Заказ на сайте ParfumeLover",
-                    sender="deft727@gmail.com",
-                    recipients=["zarj09@gmail.com"])
-                    msg.html = "Уважаемый "+user.oder.username+" Вами был сделан заказ на сайте <a href='www.ParfumeLover'>ParfumeLover</a>"+" На сумму " #+user.price  
-                    #time.ctime()
-                    mail.send(msg)
+                    send_mail()
+
+
 
 #### №№№№№№№№№№№№№№№№№№№№№      как удалить заказы после заказа из корзины?
 
@@ -533,7 +528,25 @@ def cart():
     return render_template('cart.html',admin=name,search=search,items=cart,totalPrice=totalPrice,
     discount=discount,summ=summ,cartProduct=cartProduct)
 
-        
+                    ######################################
+
+                    # как отправить информацию о заказе ? цену и товар 
+
+                    ########
+
+def send_mail():
+    userId=current_user.get_id()
+    user=Oders.query.filter_by(user_id=userId).first()
+    price=user.price
+    print(price)
+    msg = Message("Заказ на сайте ParfumeLover",
+    sender="deft727@gmail.com",
+    recipients=["zarj09@gmail.com"])
+    msg.html = "Заказ на сайте ParfumeLover " +'пользователя '+user.oder.username ###  +price
+    #time.ctime()
+    mail.send(msg)
+
+
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():

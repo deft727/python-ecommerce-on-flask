@@ -130,8 +130,8 @@
       {%for i in x |sort(attribute='creationData')|reverse %}
       <tbody>
         <tr>
-          <td  class="text-primary">{{i.author}}</td>
-        </tr>
+          <td  class="text-primary">{{i.author}} , <small class="text-muted">{{i.creationData}}</small>
+          </tr>
         <tr>
           <td class="font-italic">{{i.otziv}}
             {% if current_user.username==admin.name or current_user.username == i.author%}
