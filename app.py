@@ -389,7 +389,8 @@ def show():
         try:
             db.session.add(rev)
             db.session.commit()
-            return redirect('/')
+            flash('коментарий добавлен','success')
+            return redirect(url_for('show', id=nameId))
         except:
             return redirect ('/')
     
