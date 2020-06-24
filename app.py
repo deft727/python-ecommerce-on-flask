@@ -172,6 +172,7 @@ class Oders(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     creationData = db.Column(db.DateTime)
     quantity=db.Column(db.Integer, nullable=False)
+    oder=db.relationship('User',backref='User',lazy=True)
 
 
 @app.errorhandler(404)
@@ -400,7 +401,7 @@ def show():
         try:
             db.session.delete(rev)
             db.session.commit()
-            return redirect ('/')
+            return redirect(url_for('show', id=nameId))
         except:
             return redirect ('/')
     value=request.form.get('10')
@@ -431,15 +432,15 @@ def show():
                 db.session.commit()
             finally:
                 flash('Товар успешно добавлен в корзину','success')
-                return redirect('/')
+                return redirect(url_for('show', id=nameId))
         else:
             sale.quantity=addtocart
             try:
                 db.session.commit()
                 flash('Товар успешно добавлен в корзину','success')
-                return redirect('/')
+                return redirect(url_for('show', id=nameId))
             except:
-                return redirect ('/')
+                return redirect(url_for('show', id=nameId))
     return render_template('show.html', search=search,title=content.name,content=content,
     admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount)
 
@@ -503,14 +504,16 @@ def cart():
                     db.session.add(oder)
                     db.session.commit()
                     flash('Спасибо за покупку','success')
-                    user=User.query.filter_by(id=user_id).first()
-                    msg = Message("Сделан заказ ",
+                    ######################################
+                    user=Oders.query.filter_by(id=user_id).first()
+                    msg = Message("Заказ на сайте ParfumeLover",
                     sender="deft727@gmail.com",
                     recipients=["zarj09@gmail.com"])
-                    msg.html = "<b>пользователем </b>"+ user.username+ time.ctime()+"юзер ид="
+                    msg.html = "Уважаемый "+user.oder.username+" Вами был сделан заказ на сайте <a href='www.ParfumeLover'>ParfumeLover</a>"+" На сумму " #+user.price  
+                    #time.ctime()
                     mail.send(msg)
 
-#### №№№№№№№№№№№№№№№№№№№№№      как удалить заказы после заказа?
+#### №№№№№№№№№№№№№№№№№№№№№      как удалить заказы после заказа из корзины?
 
 
                     return redirect('cart')
