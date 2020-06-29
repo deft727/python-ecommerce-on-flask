@@ -429,25 +429,39 @@ def show():
             valuecount=20
             count=4
     if  addtocart:
-        sale=Cart.query.filter_by(productid=nameId).first()
-
-        if sale is None:
-            s=Cart(userid=user_id,productid=nameId,quantity=addtocart)
-
-            try:
-                db.session.add(s)
-                db.session.commit()
-            finally:
-                flash('Товар успешно добавлен в корзину','success')
-                return redirect(url_for('show', id=nameId))
-        else:
-            sale.quantity=addtocart
-            try:
+            item = db.session.query(Cart).filter(
+            db.and_(Cart.userid == user_id, Cart.productid==nameId)).first()
+            if item is None:
+                product=Cart(userid=user_id,productid=nameId,quantity=addtocart)
+                db.session.add(product)
                 db.session.commit()
                 flash('Товар успешно добавлен в корзину','success')
                 return redirect(url_for('show', id=nameId))
-            except:
+            else:
+                item.quantity=addtocart
+                db.session.commit()
+                flash('Товар успешно добавлен в корзину','success')
                 return redirect(url_for('show', id=nameId))
+
+
+
+        # if sale is None:
+        #     s=Cart(userid=user_id,productid=nameId,quantity=addtocart)
+
+        #     try:
+        #         db.session.add(s)
+        #         db.session.commit()
+        #     finally:
+        #         flash('Товар успешно добавлен в корзину','success')
+        #         return redirect(url_for('show', id=nameId))
+        # else:
+        #     sale.quantity=addtocart
+        #     try:
+        #         db.session.commit()
+        #         flash('Товар успешно добавлен в корзину','success')
+        #         return redirect(url_for('show', id=nameId))
+        #     except:
+        #         return redirect(url_for('show', id=nameId))
     return render_template('show.html', search=search,title=content.name,content=content,
     admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount)
 
