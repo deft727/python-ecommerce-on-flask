@@ -234,7 +234,7 @@ def index():
 
 
     if cartId and current_user.is_anonymous:
-        return redirect('/login')
+        user_id=10000001
 ###########################################
 
 
@@ -429,6 +429,8 @@ def show():
             valuecount=20
             count=4
     if  addtocart:
+            # if  current_user.is_anonymous:
+            #     user_id=10000001
             item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==nameId)).first()
             if item is None:
@@ -514,7 +516,8 @@ def cart():
         a=value.split('/')
         idtovara=int(a[0])
         quantity=int(a[1])
-        tovar=Cart.query.filter_by(productid=idtovara).first()
+        tovar=db.session.query(Cart).filter(
+            db.and_(Cart.userid == user_id, Cart.productid==idtovara)).first()
         tovar.quantity=quantity
         db.session.commit()
         return redirect(url_for('cart'))
@@ -535,19 +538,20 @@ def cart():
 #### №№№№№№№№№№№№№№№№№№№№№      как удалить заказы после заказа из корзины?
 
 
-                    return redirect('cart')
+                    return redirect(url_for('cart'))
                 except:
-                    return redirect ('/cart')
+                    return redirect(url_for('cart'))
                 
     deleteFromCart=request.form.get('deleteFromCart')
     if deleteFromCart is not None:
-        deletecart=Cart.query.filter_by(productid=deleteFromCart).first()
+        deletecart=db.session.query(Cart).filter(
+            db.and_(Cart.userid == user_id, Cart.productid==deleteFromCart)).first()
         try:
             db.session.delete(deletecart)
             db.session.commit()
-            return redirect('/cart')
+            return redirect(url_for('cart'))
         except:
-             return redirect('/cart')
+            return redirect(url_for('cart'))
 
     return render_template('cart.html',admin=name,search=search,items=cart,totalPrice=totalPrice,
     discount=discount,summ=summ,cartProduct=cartProduct)
