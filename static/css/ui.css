@@ -5,7 +5,7 @@ html {
   font-family: 'Inter', sans-serif;
   font-size: 16px; }
 body{
-  font-size: 16,5px;
+  font-size: 15px;
 }
 
 a:hover {
@@ -1212,7 +1212,7 @@ footer.light .footer-copyright{	background: none repeat scroll 0 0 rgba(255, 255
 	Widgets 
 ====================== */
 .widget{	padding: 20px;	margin-bottom: 40px;}
-.widget.widget-last{	margin-bottom: 0px;}
+.widget.widget-last{	margin-bottom: 1px;}
 .widget.no-box{	padding: 0;	background-color: transparent;	margin-bottom: 40px;
 	box-shadow: none; -webkit-box-shadow: none; -moz-box-shadow: none; -ms-box-shadow: none; -o-box-shadow: none;}
 .widget.subscribe p{	margin-bottom: 18px;}
@@ -1261,3 +1261,6 @@ transition: all 250ms ease-in-out 0s;
   margin-left: 150px;
 }
 
+.uppbottom{position: fixed; bottom: 25px; right: 1px; cursor: pointer; margin-right: 20px;}
+.formbtm{margin-left: 80%; padding-top: 5px;}
+.editbtm{margin-left: 85%; padding-top: 5px;}

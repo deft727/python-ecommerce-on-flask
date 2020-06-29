@@ -605,18 +605,36 @@ def edit():
         form.content.data=art.content
         form.price.data=art.price
         form.alt_txt.data=art.alt_txt
-        form.img_name.data=art.img
+        form.img_name1.data=art.img1
+        form.img_name2.data=art.img2
+        form.img_name3.data=art.img3
         userid=current_user.get_id()
         form.characteristics.data=art.characteristics
-        f=form.img.data
+        f1=form.img1.data
+        f2=form.img2.data
+        f3=form.img3.data
+        fname1=request.form.get('img_name1')
+        fname2=request.form.get('img_name2')
+        fname3=request.form.get('img_name3')
 
-        if f:
-            fname=request.form.get('img_name')
-            img_path = os.getcwd() + url_for('static', filename='images/' + fname)
-            image = Image.open(f)
+        if f1:
+            print('f1 prowol')
+            image = Image.open(f1)
             size=480,480
             image = image.resize(size)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname1))
+        if f2:
+            print('f2 prowol')
+            image = Image.open(f2)
+            size=480,480
+            image = image.resize(size)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname2))
+        if f3:
+            print('f3 prowol')
+            image = Image.open(f3)
+            size=480,480
+            image = image.resize(size)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname3))
 
         if form.validate_on_submit():
             art.brand=request.form.get('brand')
@@ -624,7 +642,9 @@ def edit():
             art.aromat=request.form.get('aromat')
             art.price=request.form.get('price')
             art.alt=request.form.get('alt_txt')
-            art.img=request.form.get('img_name')
+            art.img1=request.form.get('img_name1')
+            art.img2=request.form.get('img_name2')
+            art.img3=request.form.get('img_name3')
             art.characteristics=request.form.get('characteristics')
             art.content= request.form.get('content')
             art.Authors=name

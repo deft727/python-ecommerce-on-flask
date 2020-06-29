@@ -28,22 +28,16 @@
 				</a>
 			</header>
 			<div class="filter-content collapse show" id="collapse_2" >
-
-				
 				<div class="card-body">
 					<div class="card-body"> 
-					
-
 						{%for brand in brand%} 
 						<label class="custom-control custom-radio" name="radio">
 							<input type="radio" name="myfilter_brand" value="{{brand.brand}}"   class="custom-control-input">
 							<div class="custom-control-label"  > {{brand.brand}} </div>
 						  </label>{%endfor%}
-		</div> <!-- card-body.// -->
+		</div> 
 			</div>
-		</article> <!-- filter-group .// -->
-		
-
+		</article> 
 		<article class="filter-group">
 			<header class="card-header">
 				<a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="false" class="">
@@ -58,29 +52,23 @@
 						<input type="radio" name="myfilter_aromat" value={{aromat.aromat}} class="custom-control-input">
 						<div class="custom-control-label"> {{aromat.aromat}} </div>
 					  </label>{%endfor%}
-
-				</div><!-- card-body.// -->
+				</div>
 			</div>
-		</article> <!-- filter-group .// -->
-		
-				
+		</article> 	
 			<div class="filter-content collapse show" id="collapse_3">
 				<div class="card-body">
 					
 					<div class="form-row">
 					<div class="form-group col-md-6">
 					
-					</div> <!-- form-row.// -->
+					</div>
 					<button class="btn btn-block btn-primary">Выбрать</button>		
-				
 				</form>
-
-				</div><!-- card-body.// -->
+				</div>
 			</div>
 		</article>
-	</div> <!-- card.// -->
-	
-		</aside> <!-- col.// -->
+	</div> 
+		</aside> 
 		<main class="col-md-9">
 	
 	<header class="border-bottom mb-4 pb-3">
@@ -105,10 +93,6 @@
 
 {% block body %}
 
-
-
-
-
 <div class="row"  >
 	{%for item in pages.items%}
 	<a href="/show?id={{item.id}}">
@@ -123,24 +107,27 @@
 					<a class="btn btn-danger" href="/remove?id={{ item.id }}">удалить</a>
 				  </div> 
 
+				{%endif%} 
+				{%if item.img1%}
+			<img src="/static/images/{{item.img1}}" class="img-fluid w-100" alt="{{item.alt_txt}}">
 				{%endif%}
-			<img src="/static/images/{{item.img2}}" class="rounded mx-auto d-block" alt="{{item.alt_txt}}">
-			<!-- <a class="btn-overlay" href="{{item.img}}"><i class="fa fa-search-plus"></i> Quick view</a> -->
-
-
-			</div> <!-- img-wrap.// --></a>
+				{%if item.img2%} 
+				<img src="/static/images/{{item.img2}}" class="img-fluid w-100" alt="{{item.alt_txt}}">
+				{%endif%} 
+				{%if item.img3%}
+				<img src="/static/images/{{item.img3}}" class="img-fluid w-100" alt="{{item.alt_txt}}">
+				{%endif%} 
+			</div></a>
 			<figcaption class="info-wrap">
 				<div class="fix-height">
 					
 					<a href="/show?id={{ item.id}}" class="title" alt="{{item.alt_txt}}"><b>{{item.brand}}</b></a>
 					<p>{{item.name}}</p>
 					<div class="price-wrap mt-2">
-						<span class="price">{{item.price}} грн</span>
-					</div> <!-- price-wrap.// -->
+						<span class="price ">{{item.price}} грн</span>
+					</div>
 				</div>
 				<form action="" method="POST">
-
-				
 			</figcaption> <button name="item_to_cart" value={{item.id}} class="btn btn-outline-success">Добавить</button>	</form>
 		</figure>
 	</div>	
@@ -163,15 +150,13 @@
 		  {% endfor %}
 		  <li class="page-item">
 			<a class="page-link" href="./?page={{pages.next_num}}" aria-label="Next">
+			
 			  <span aria-hidden="true">&raquo;</span>
 			  <span class="sr-only">Next</span>
 			</a>
 		  </li>
 		</ul>
-
-
-		<img src="/static/images/uppp.png" alt="Наверх" title="Наверх" id="Go_Top"
-		style="position: fixed; bottom: 25px; right: 1px; cursor: pointer; margin-right: 20px; ">
+		<img src="/static/images/uppp.png" alt="Наверх" title="Наверх" id="Go_Top" class="uppbottom">
 	  </nav>
 
 	  {% endblock %}
