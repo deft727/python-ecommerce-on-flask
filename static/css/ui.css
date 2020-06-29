@@ -8,10 +8,6 @@ body{
   font-size: 16,5px;
 }
 
-/* ========================
-INCLUDE STYLES AND COMPONENTS
-===================== */
-/* ================== HELPERS  =================== */
 a:hover {
   text-decoration: none; }
 .img-fluid{max-width:100%;height:auto}
@@ -1255,4 +1251,12 @@ box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 -o-transition: all 250ms ease-in-out 0s;
 transition: all 250ms ease-in-out 0s;
 
+}
+
+
+
+.reset_password{
+  margin-top: 100px;
+  margin-bottom: 150px;
+  margin-left: 150px;
 }

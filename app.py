@@ -68,6 +68,10 @@ class Products(db.Model):
     def __repr__(self):
         return f'<Products{self.content}>'
 
+class reset(FlaskForm):
+    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
+    submit = SubmitField('сбросить пароль')
+
 
 class RegistrationForm(FlaskForm):
     username = StringField('Имя', validators=[DataRequired(), Length(min=4)])
@@ -236,23 +240,20 @@ def index():
 
 
     if cartId is not None:
-        item=Cart.query.filter_by(productid=cartId).first()
+        item = db.session.query(Cart).filter(
+        db.and_(Cart.userid == user_id, Cart.productid==cartId)).first()
         if item is None:
             product=Cart(userid=user_id,productid=cartId,quantity=1)
-            try:
-                db.session.add(product)
-                db.session.commit()
-            except:
-                return redirect ('/')
+            db.session.add(product)
+            db.session.commit()
+            return redirect ('/')
         else:
             number=int(item.quantity+1)
             if number>4:
                 return redirect('/')
             item.quantity=number
-            try:
-                db.session.commit()
-            except:
-                return redirect ('/')
+            db.session.commit()
+            return redirect ('/')
 
     pages=items.paginate(page=page,per_page=15)
     colvo= items.count()
@@ -359,15 +360,21 @@ def logout():
 
 
 @app.route('/remove', methods=['GET'])
-def removeTask():
+def remove():
     productId = request.args.get('id')
+    amd= Cart.query.filter_by(productid=productId).first()
     art= Products.query.filter_by(id=productId).first()
-    try:
+
+    if amd:
+        db.session.delete(amd)
+        db.session.commit()
+
+    if art:
         db.session.delete(art)
         db.session.commit()
-        return redirect('/')
-    except:
-        return redirect ('/')
+
+        return redirect(url_for('index'))
+
 
 
 @app.route('/show',methods=['GET', 'POST'])
@@ -481,7 +488,7 @@ def cart():
     totalPrice=0
     discount=0
     for y in cart:
-        totalPrice+=y.prods.price
+        totalPrice+=y.prods.price*y.quantity
     summ=totalPrice
 
     if totalPrice>1500:
@@ -490,11 +497,14 @@ def cart():
 
     value=request.form.get("VALUE")
     if value:
-        idtovara=int(value[0])
-        quantity=int(value[2])
+        a=value.split('/')
+        idtovara=int(a[0])
+        quantity=int(a[1])
         tovar=Cart.query.filter_by(productid=idtovara).first()
         tovar.quantity=quantity
         db.session.commit()
+        return redirect(url_for('cart'))
+
     
     oders=request.form.get('oders')
     if oders:
@@ -538,35 +548,42 @@ def send_mail():
     userId=current_user.get_id()
     user=Oders.query.filter_by(user_id=userId).first()
     price=user.price
-    print(price)
+    print(user.oder.email)
     msg = Message("Заказ на сайте ParfumeLover",
     sender="deft727@gmail.com",
-    recipients=["zarj09@gmail.com"])
+    recipients=["zarj09@gmail.com",user.oder.email])
     msg.html = "Заказ на сайте ParfumeLover " +'пользователя '+user.oder.username ###  +price
     #time.ctime()
     mail.send(msg)
 
+@app.route('/reset_password')
+def reset_password():
+    search=SearchForm()
+    name=Admin()
+    form=reset()
+    return render_template('reset_password.html',admin=name,search=search,form=form)
 
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
 def edit():
+    search=SearchForm()
     nameAdmin=Admin()
     name=nameAdmin.name
     art=Products.query.filter_by(id=request.args.get('id')).first()
     time = datetime.now()
 
     if current_user.username==name:
-        form = RegistrationForm()
+        form =ProductsForm()
         form.brand.data=art.brand
         form.name.data=art.name
-        form.aromat.date=art.aromat
+        form.aromat.data=art.aromat
         form.content.data=art.content
         form.price.data=art.price
         form.alt_txt.data=art.alt_txt
         form.img_name.data=art.img
-        f=form.img.data
         userid=current_user.get_id()
-        characteristics=art.characteristics
+        form.characteristics.data=art.characteristics
+        f=form.img.data
 
         if f:
             fname=request.form.get('img_name')
@@ -588,11 +605,9 @@ def edit():
             art.Authors=name
             art.userId=userid
             art.creationData=time
-            try:
-                db.session.commit()
-                return redirect('/')
-            except:
-                return redirect('/')
+            
+            db.session.commit()
+            return redirect('/')
 
     else:
         return redirect('/')
@@ -623,7 +638,7 @@ def edit_profile():
             profile.phone=request.form.get('phone')
             db.session.commit()
             flash('Ваши изменения были сохранены','success')
-            return redirect('/')
+            return redirect(url_for('profile'))
 
     return render_template('edit-profile.html', form=form,search=search,admin=name,title='edit profile')
 

@@ -99,14 +99,9 @@
 
 				
 			</div>
-	</header><!-- view list and table  <div class="btn-group">
-		<a href="#" class="btn btn-outline-secondary" data-toggle="tooltip" title="" data-original-title="List view"> 
-			<i class="fa fa-bars"></i></a>
-		<a href="#" class="btn  btn-outline-secondary active" data-toggle="tooltip" title="" data-original-title="Grid view"> 
-			<i class="fa fa-th"></i></a>
-	</div>-->
-{%endblock%}	
+	</header>
 
+{%endblock%}	
 
 {% block body %}
 
@@ -130,8 +125,7 @@
 
 				{%endif%}
 <!-- "/static/images///  как поправить ................................. -->
-				<img src="{{item.img}}" alt="{{item.alt_txt}}">
-
+			<img src="{{item.img}}" class="rounded mx-auto d-block" alt="{{item.alt_txt}}">
 				<!-- <a class="btn-overlay" href="{{item.img}}"><i class="fa fa-search-plus"></i> Quick view</a> -->
 
 
