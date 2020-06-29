@@ -85,8 +85,8 @@
 				</article>
 				
 
-			</div> <!-- card-body .// -->
-		</article> <!-- card.// -->
+			</div> 
+		</article> 
 
 		<article class="card  mb-3">
 			<div class="card-body">
@@ -95,10 +95,10 @@
 				<div class="col-md-6">
 					{%for i in otzivy%}
 					<figure class="itemside  mb-3">
-						<div class="aside"><img src="{{i.img}}" class="border img-sm"></div>
+						<div class="aside"><img src="/static/images/{{i.img}}" class="border img-sm"></div>
 						<figcaption class="info">
-							<time class="text-muted"><i class="fa fa-calendar-alt"></i>{{i.creationData}} </time><br>
-							<b>{{i.author}}  </b>
+							<time class="text-muted"><i class="fa fa-calendar-alt"></i>{{i.creationData}}</time><br>
+							<b>{{i.author}} </b>
 
 							<form action="" method="POST" >
 							<p > {{i.otziv}}  </p>	
@@ -107,19 +107,17 @@
 
 					</figure>
 					{%endfor%}
-				</div> <!-- col.// -->
+				</div>
 				
-			</div> <!-- row.// -->
+			</div>
 
-			</div> <!-- card-body .// -->
-		</article> <!-- card.// -->
+			</div> 
+		</article>
 
-	</main> <!-- col.// -->
+	</main> 
 </div>
 
-</div> <!-- container .//  -->
+</div> 
 </section>
-<!-- ========================= SECTION CONTENT END// ========================= -->
-
 
 {%endblock%}	

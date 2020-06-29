@@ -61,7 +61,9 @@ class Products(db.Model):
     characteristics=db.Column(db.Text, nullable=False)
     alt_txt=db.Column(db.String(250), nullable=True)
     creationData = db.Column(db.DateTime)
-    img=db.Column(db.String(248), nullable=True)
+    img1=db.Column(db.String(248), nullable=True)
+    img2=db.Column(db.String(248), nullable=True)
+    img3=db.Column(db.String(248), nullable=True)
     user_id = db.Column(db.Integer, nullable=False)
     otzivy2= db.relationship('Revs',backref='Products',lazy=True)
 
@@ -123,8 +125,12 @@ class ProductsForm(FlaskForm):
     characteristics = StringField(u'характеристики', widget=TextArea(),validators=[DataRequired()])
     price = IntegerField('Цена', validators=[DataRequired()])
     alt_txt=StringField('Альтернативный текст', validators=[DataRequired()])
-    img=  FileField()
-    img_name=StringField('img name', validators=[DataRequired()])
+    img1=  FileField()
+    img2=  FileField()
+    img3=  FileField()
+    img_name1=StringField('img name 1')
+    img_name2=StringField('img name 2')
+    img_name3=StringField('img name 3')
     Btm = SubmitField('Добавить')
 
     def validate_Content(self, field) :
@@ -278,15 +284,31 @@ def add():
         aromat=request.form.get('aromat')
         price=request.form.get('price')
         alt=request.form.get('alt_txt')
-        f=form.img.data
-        fname=request.form.get('img_name')
-        if f:
-            img_path = os.getcwd() + url_for('static', filename='images/' + fname)
-            image = Image.open(f)
+        f1=form.img1.data
+        f2=form.img2.data
+        f3=form.img3.data
+        fname1=request.form.get('img_name1')
+        fname2=request.form.get('img_name2')
+        fname3=request.form.get('img_name3')
+
+        if f1:
+            print('f1 prowol')
+            image = Image.open(f1)
             size=480,480
             image = image.resize(size)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname))
-
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname1))
+        if f2:
+            print('f2 prowol')
+            image = Image.open(f2)
+            size=480,480
+            image = image.resize(size)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname2))
+        if f3:
+            print('f3 prowol')
+            image = Image.open(f3)
+            size=480,480
+            image = image.resize(size)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname3))
         Authors='deft'
         content= request.form.get('content')
         characteristics= request.form.get('characteristics')
@@ -294,7 +316,7 @@ def add():
         if form.validate_on_submit():
             items = Products(brand=brand, Authors=Authors, name=name, price=price,
                             content=content,characteristics=characteristics, creationData=time,user_id=userId,
-                            alt_txt=alt,img=fname,aromat=aromat)
+                            alt_txt=alt,img1=fname1,img2=fname2,img3=fname3,aromat=aromat)
             try:
                 db.session.add(items)
                 db.session.commit()
@@ -326,7 +348,6 @@ def register():
         db.session.commit()
         flash('Спасибо за регистрацию','success')
         return redirect('/login')
-
 
     return render_template('register.html', title='Регистрация', form=form,search=search,admin=name)
 
@@ -376,7 +397,6 @@ def remove():
         return redirect(url_for('index'))
 
 
-
 @app.route('/show',methods=['GET', 'POST'])
 def show():
     form=Reviews()
@@ -385,7 +405,7 @@ def show():
     revies=Reviews()
     nameId=request.args.get('id')
     content=Products.query.filter_by(id=nameId).first()
-    img=content.img
+    img1=content.img1
     revs1=request.form.get('Rev')
     otziv=Revs.query.filter_by(product_id=nameId).all()
     user_id=current_user.get_id()
@@ -393,7 +413,7 @@ def show():
     if revies.validate_on_submit():
         time = datetime.now()
         author=current_user.username
-        rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time,img=img)
+        rev= Revs(otziv=revs1,user_id=user_id,product_id=nameId,author=author,creationData=time,img=img1)
         try:
             db.session.add(rev)
             db.session.commit()
@@ -408,9 +428,11 @@ def show():
         try:
             db.session.delete(rev)
             db.session.commit()
+            flash('Отзыв удален','success')
             return redirect(url_for('show', id=nameId))
         except:
             return redirect ('/')
+
     value=request.form.get('10')
     valuecount=5
     count=1
@@ -445,25 +467,6 @@ def show():
                 flash('Товар успешно добавлен в корзину','success')
                 return redirect(url_for('show', id=nameId))
 
-
-
-        # if sale is None:
-        #     s=Cart(userid=user_id,productid=nameId,quantity=addtocart)
-
-        #     try:
-        #         db.session.add(s)
-        #         db.session.commit()
-        #     finally:
-        #         flash('Товар успешно добавлен в корзину','success')
-        #         return redirect(url_for('show', id=nameId))
-        # else:
-        #     sale.quantity=addtocart
-        #     try:
-        #         db.session.commit()
-        #         flash('Товар успешно добавлен в корзину','success')
-        #         return redirect(url_for('show', id=nameId))
-        #     except:
-        #         return redirect(url_for('show', id=nameId))
     return render_template('show.html', search=search,title=content.name,content=content,
     admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount)
 
