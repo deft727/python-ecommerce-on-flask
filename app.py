@@ -183,6 +183,7 @@ class Oders(db.Model):
     creationData = db.Column(db.DateTime)
     quantity=db.Column(db.Integer, nullable=False)
     oder=db.relationship('User',backref='User',lazy=True)
+    #prod = db.relationship('Products',backref='Prod',lazy=True)
 
 
 @app.errorhandler(404)
@@ -385,14 +386,18 @@ def remove():
     productId = request.args.get('id')
     amd= Cart.query.filter_by(productid=productId).first()
     art= Products.query.filter_by(id=productId).first()
-
+    revs=Revs.query.filter_by(product_id=productId).first()
     if amd:
         db.session.delete(amd)
         db.session.commit()
-
+    if revs:
+        db.session.delete(revs)
+        db.session.commit()
     if art:
         db.session.delete(art)
         db.session.commit()
+
+
 
         return redirect(url_for('index'))
 
@@ -569,13 +574,12 @@ def send_mail():
     userId=current_user.get_id()
     user=Oders.query.filter_by(user_id=userId).first()
     price=user.price
-    print(user.oder.email)
-    msg = Message("Заказ на сайте ParfumeLover",
-    sender="deft727@gmail.com",
-    recipients=["zarj09@gmail.com",user.oder.email])
-    msg.html = "Заказ на сайте ParfumeLover " +'пользователя '+user.oder.username ###  +price
-    #time.ctime()
-    mail.send(msg)
+    with mail.connect() as conn:
+        msg = Message("Заказ на сайте ParfumeLover",
+        recipients=["zarj09@gmail.com"])
+        msg.html =render_template('mail.html',user=user,price=price)
+        conn.send(msg)
+
 
 @app.route('/reset_password')
 def reset_password():
