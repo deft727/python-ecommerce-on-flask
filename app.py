@@ -291,7 +291,7 @@ def index():
             db.session.commit()
             return redirect ('/')
 
-    pages=items.paginate(page=page,per_page=15)
+    pages=items.paginate(page=page,per_page=24)
     colvo= items.count()
     cartProduct= Cart.query.filter_by(userid=user_id).count()
     brand=Products.query.distinct(Products.brand).group_by(Products.brand)
