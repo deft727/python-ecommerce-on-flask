@@ -46,7 +46,7 @@ def get_data(pages):
         characteristics='characteristic characteristics characteristics characteristics characteristics characteristics  scharacteristics'
         items = Products(brand=brand, Authors=Authors, name=name, price=int(price1),
                     content=text,characteristics=characteristics, creationData=time,user_id=userId,
-                    img=img,aromat=aromat)
+                    img1=img,aromat=aromat)
         db.session.add(items)
         db.session.commit()
 

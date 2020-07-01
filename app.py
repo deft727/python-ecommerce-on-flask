@@ -16,6 +16,9 @@ from wtforms.fields.html5 import TelField
 from flask_migrate import Migrate
 from wtforms.widgets import TextArea
 from werkzeug.utils import secure_filename
+from time import time
+import jwt
+from flask import make_response
 
 
 app = Flask(__name__)
@@ -40,9 +43,25 @@ class User(db.Model, UserMixin):
     otdel=db.Column(db.String(60), nullable=False)
     phone = db.Column(db.Integer, nullable=False)
     otzivy= db.relationship('Revs',backref='User',lazy='dynamic')
-    
+
+    def set_password(self, password):
+        self.password = bcrypt.generate_password_hash(password)
+
     def __repr__(self):
         return f"User('{self.username}' - '{self.email}')"
+    def get_reset_password_token(self, expires_in=600):
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)
 
 
 @login_manager.user_loader
@@ -70,10 +89,15 @@ class Products(db.Model):
     def __repr__(self):
         return f'<Products{self.content}>'
 
-class reset(FlaskForm):
+class  ResetPasswordRequestForm(FlaskForm):
     email = StringField('Электроная почта', validators=[DataRequired(), Email()])
     submit = SubmitField('сбросить пароль')
 
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Повторите пароль', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Изменить пароль')
 
 class RegistrationForm(FlaskForm):
     username = StringField('Имя', validators=[DataRequired(), Length(min=4)])
@@ -240,15 +264,20 @@ def index():
 # как отслеживать не зарегестрированых пользователей ?
 
 
-    if cartId and current_user.is_anonymous:
-        user_id=10000001
+    # if  cartId and current_user.is_anonymous:
+    #     print('asfdafwe')
+    #     user_id=999999
+    #     resp = make_response(redirect('/'))
+    #     resp.set_cookie("anonymousId", str(user_id))
+    #     return resp
+
 ###########################################
 
 
 
     if cartId is not None:
         item = db.session.query(Cart).filter(
-        db.and_(Cart.userid == user_id, Cart.productid==cartId)).first()
+            db.and_(Cart.userid == user_id, Cart.productid==cartId)).first()
         if item is None:
             product=Cart(userid=user_id,productid=cartId,quantity=1)
             db.session.add(product)
@@ -534,9 +563,10 @@ def cart():
     oders=request.form.get('oders')
     if oders:
             for i in cart:
-                oder=Oders(productid=i.productid,rebate=discount,price=summ*i.quantity,user_id=user_id,creationData=time,quantity=i.quantity)
+                oder=Oders(productid=i.productid,rebate=discount,price=summ,user_id=user_id,creationData=time,quantity=i.quantity)
                 try:
                     db.session.add(oder)
+                    db.session.query(Cart).filter(Cart.userid==user_id).delete()
                     db.session.commit()
                     flash('Спасибо за покупку','success')
                     send_mail()
@@ -564,29 +594,61 @@ def cart():
     return render_template('cart.html',admin=name,search=search,items=cart,totalPrice=totalPrice,
     discount=discount,summ=summ,cartProduct=cartProduct)
 
-                    ######################################
-
-                    # как отправить информацию о заказе ? цену и товар 
-
-                    ########
-
+#    Oders
+ #   query.order_by(id.desc()).first()
 def send_mail():
     userId=current_user.get_id()
-    user=Oders.query.filter_by(user_id=userId).first()
+    user= query.order_by(Oders.id.desc()).first() 
+
+    print(user)
     price=user.price
     with mail.connect() as conn:
         msg = Message("Заказ на сайте ParfumeLover",
-        recipients=["zarj09@gmail.com"])
+        recipients=["zarj09@gmail.com",user.oder.email])
         msg.html =render_template('mail.html',user=user,price=price)
         conn.send(msg)
 
 
-@app.route('/reset_password')
+@app.route('/reset_password',methods=['GET', 'POST'])
 def reset_password():
     search=SearchForm()
     name=Admin()
-    form=reset()
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            send_password_reset_email(user)
+        flash('Проверьте свою почту и следуйте инструкции','success')
+        return redirect(url_for('login'))
     return render_template('reset_password.html',admin=name,search=search,form=form)
+
+def send_password_reset_email(user):
+    token = user.get_reset_password_token()
+
+    with mail.connect() as conn:
+        msg = Message("[ParfumeLovwe] Сброс пароля",
+        recipients=[user.email])
+        msg.html =render_template('reset.html',user=user,token=token)
+        conn.send(msg)
+
+@app.route('/res_pass/<token>', methods=['GET', 'POST'])
+def res_pass(token):
+    search=SearchForm()
+    name=Admin()
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Пароль был изменен','success')
+        return redirect(url_for('login'))
+    return render_template('res_pass.html', form=form,admin=name,search=search)
 
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
@@ -618,19 +680,16 @@ def edit():
         fname3=request.form.get('img_name3')
 
         if f1:
-            print('f1 prowol')
             image = Image.open(f1)
             size=480,480
             image = image.resize(size)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname1))
         if f2:
-            print('f2 prowol')
             image = Image.open(f2)
             size=480,480
             image = image.resize(size)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname2))
         if f3:
-            print('f3 prowol')
             image = Image.open(f3)
             size=480,480
             image = image.resize(size)
