@@ -27,7 +27,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 mail = Mail(app)
-app.config['UPLOAD_FOLDER'] = ".\static\images"
+app.config['UPLOAD_FOLDER'] = "/static/images"
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
@@ -329,19 +329,16 @@ def add():
         fname3=request.form.get('img_name3')
 
         if f1:
-            print('f1 prowol')
             image = Image.open(f1)
             size=480,480
             image = image.resize(size)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname1))
         if f2:
-            print('f2 prowol')
             image = Image.open(f2)
             size=480,480
             image = image.resize(size)
             image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname2))
         if f3:
-            print('f3 prowol')
             image = Image.open(f3)
             size=480,480
             image = image.resize(size)
