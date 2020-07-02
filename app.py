@@ -763,4 +763,5 @@ def about():
     name=Admin()
     return render_template('aboutUs.html',search=search,admin=name,title='AboutUs')
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
+#debug=True
