@@ -214,7 +214,10 @@ class Oders(db.Model):
     quantity=db.Column(db.Integer, nullable=False)
     oder=db.relationship('User',backref='User',lazy=True)
     #prod = db.relationship('Products',backref='Prod',lazy=True)
-
+class quickorderForm(FlaskForm):
+    Name=StringField('Имя', validators=[DataRequired()])
+    Phone = IntegerField('Телефон', validators=[DataRequired()])
+    submit = SubmitField('Заказать')
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -263,6 +266,7 @@ def index():
         items=Products.query.filter(Products.brand.contains(data) | Products.name.contains(data))
 
     cartId=request.form.get('item_to_cart')
+
 ###########################################
 
 
@@ -757,6 +761,29 @@ def about():
     search=SearchForm()
     name=Admin()
     return render_template('aboutUs.html',search=search,admin=name,title='AboutUs')
+
+@app.route('/quickorder', methods=['POST'])
+def quick():
+    name=request.form.get('quickordername')
+    phone=request.form.get('quickorderphone')
+    ID=request.form.get('quickID')
+    time=datetime.now()
+    PROD=Products.query.filter_by(id=ID).first()
+    price=PROD.price
+    nazv=PROD.name
+    brand=PROD.brand
+    if phone:
+        with mail.connect() as conn:
+            msg = Message("[ParfumeLover] Быстрый заказ",
+            recipients=['zarj09@gmail.com'])
+            msg.html =render_template('quickorder_email.html',name=name,phone=phone,time=time,
+                                        price=price,nazv=nazv,brand=brand)
+            conn.send(msg)
+    else:
+        return redirect('/')
+    flash('Заказ принят в ближайшее время я с Вами свяжусь :)','success')
+    return redirect('/')
+
 if __name__ == '__main__':
-    app.run()
-#debug=True
+    app.run(debug=True)
+#
