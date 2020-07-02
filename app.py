@@ -606,9 +606,7 @@ def cart():
  #   query.order_by(id.desc()).first()
 def send_mail():
     userId=current_user.get_id()
-    user= query.order_by(Oders.id.desc()).first() 
-
-    print(user)
+    user= Oders.query.filter_by(user_id=userId).first()
     price=user.price
     with mail.connect() as conn:
         msg = Message("Заказ на сайте ParfumeLover",
