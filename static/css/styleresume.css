@@ -1,0 +1,203 @@
+*{padding: 0;
+    margin: 0  ;
+    box-sizing: border-box;
+    }
+  
+  body{
+      background: rgb(165, 159, 175);
+      padding: 10px;
+      font-family: Montserrat;
+  }
+  .myaside{
+      background: rgb(16, 9, 53);
+      width: 370px;
+      padding-top: 40px;
+      padding-bottom: 40px;
+  }
+  .foto{
+      width: 370px;
+      height: 370px;
+  }
+  .mecon{
+      padding-left: 90px;
+      padding-right: 90px;
+      padding-top: 110px;
+      padding-bottom: 110px;
+      color: black;
+  }
+  .contacts{
+      margin-top: 50px;
+      margin-left: 50px;
+      margin-right: 50px;
+  
+  }
+  
+  .conttitle{
+      font-size: 27px;
+      font-weight: 700;
+      line-height: 40px;
+      color: white;
+  
+  }
+  
+  .cont{
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      color: gainsboro;
+      margin-bottom: 20px;
+  }
+  
+  .ce{
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 24px;
+      color: white;
+      margin-right: 10px;
+  
+  }
+  
+  .tech-title{
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 24px;
+      color: white;
+      margin-bottom: 20px;
+  
+  
+  }
+  .techskils{
+      margin-top: 50px;
+      margin-left: 50px;
+      margin-right: 50px;
+      color: white;
+  
+  }
+  
+  .tecitem{
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      color: orange;
+      margin-left: 15px;
+  }
+  
+  .tecjtext{
+      color: rgb(216, 214, 212);
+  }
+  
+  .softs{
+          margin-top: 50px;
+          margin-left: 50px;
+          margin-right: 50px;
+          color: white;
+  }
+  
+  .softitem{
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+      color: orange;
+      margin-left: 15px;
+  
+  }
+  
+  .softtitle{
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 24px;
+      color: white;
+      margin-bottom: 20px;
+  }
+  
+  .softtext{
+      color: rgb(216, 214, 212);
+  
+  }
+  
+  .my-container{
+      background: rgb(248, 244, 244);
+      display: flex;
+      max-width: 1200px;
+      margin: auto;
+      box-shadow: black;
+  }
+  
+  
+  .python{
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      margin-bottom: 23px;
+  }
+  
+  .name{
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 40px;
+  }
+  
+  .desc{
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 24px;
+      margin-top: 40px;
+      color:rgb(70, 59, 59)
+  }
+  
+  .project{
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 24px;
+      margin-bottom: 15px;
+      margin-top: 15px;
+  }
+  
+  .info{
+      margin-bottom: 45px;
+  }
+  
+  .html{
+      color: black;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+  }
+  
+  .front{
+      color: gray;
+      font-family: Montserrat;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+  
+  }
+  
+  .exp{
+      color: black;
+      font-family: Montserrat;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 24px;
+  }
+  .pro-cont{
+      margin-bottom: 55px;
+  }
+  .proff{
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 24px;
+      margin-top: 15px;
+      margin-bottom: 15px;
+  }
+  .free{
+      color: coral;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 25px;
+      margin-bottom: 15px;
+  }
+  .ul{
+      margin-top: 15px;
+  }
+  

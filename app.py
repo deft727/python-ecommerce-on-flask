@@ -132,8 +132,14 @@ class EditProfileForm(FlaskForm):
     otdel=StringField('Отделение', validators=[DataRequired()])
     phone = TelField('Телефон')
     submit = SubmitField('Изменить')
+    
+    # def validate_username(self, username):
+    #     user = User.query.filter_by(username=username.data).first()
+    #     print(user.username,',///',username.data)
+    #     if user:
+    #         raise ValidationError('Такое имя уже существует')
 
-  
+
 class LoginForm(FlaskForm):
     email = StringField('Электроная почта', validators=[DataRequired(), Email()])
     password = PasswordField('Пароль', validators=[DataRequired()])
@@ -264,7 +270,7 @@ def index():
 # как отслеживать не зарегестрированых пользователей ?
 
 
-    # if  cartId and current_user.is_anonymous:
+    # if  not current_user.is_authenticated:
     #     print('asfdafwe')
     #     user_id=999999
     #     resp = make_response(redirect('/'))
@@ -272,10 +278,10 @@ def index():
     #     return resp
 
 ###########################################
+    if  cartId and current_user.is_anonymous:
+        return redirect('/register')
 
-
-
-    if cartId is not None:
+    if cartId is not None :
         item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==cartId)).first()
         if item is None:
@@ -292,6 +298,7 @@ def index():
             return redirect ('/')
 
     pages=items.paginate(page=page,per_page=24)
+
     colvo= items.count()
     cartProduct= Cart.query.filter_by(userid=user_id).count()
     brand=Products.query.distinct(Products.brand).group_by(Products.brand)
@@ -444,6 +451,7 @@ def show():
     otziv=Revs.query.filter_by(product_id=nameId).all()
     user_id=current_user.get_id()
     cartProduct= Cart.query.filter_by(userid=user_id).count()
+
     if revies.validate_on_submit():
         time = datetime.now()
         author=current_user.username
@@ -485,8 +493,8 @@ def show():
             valuecount=20
             count=4
     if  addtocart:
-            # if  current_user.is_anonymous:
-            #     user_id=10000001
+            if  current_user.is_anonymous:
+                return redirect('/register')
             item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==nameId)).first()
             if item is None:
@@ -746,5 +754,13 @@ def edit_profile():
 
     return render_template('edit-profile.html', form=form,search=search,admin=name,title='edit profile')
 
+@app.route('/resume')
+def resume():
+    return render_template('resume.html')
+@app.route('/aboutUs')
+def about():
+    search=SearchForm()
+    name=Admin()
+    return render_template('aboutUs.html',search=search,admin=name,title='AboutUs')
 if __name__ == '__main__':
     app.run(debug=True)
