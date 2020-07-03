@@ -627,7 +627,9 @@ def reset_password():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             send_password_reset_email(user)
-        flash('Проверьте свою почту и следуйте инструкции','success')
+            flash('Проверьте свою почту и следуйте инструкции','success')
+        else:
+            flash ('Пользователь с таким e-mail не найден','danger')
         return redirect(url_for('login'))
     return render_template('reset_password.html',admin=name,search=search,form=form)
 
