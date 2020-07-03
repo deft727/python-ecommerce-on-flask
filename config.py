@@ -14,7 +14,7 @@ class MConfig :
     ADMINS = ['zarj09@gmail.com']
     MAIL_USERNAME = 'zarj09@gmail.com'
     MAIL_DEFAULT_SENDER = 'zarj09@gmail.com'
-    MAIL_PASSWORD = 'Kirill99121'
+    MAIL_PASSWORD = 'Kirill9925'
 
     MY_KEY = 1234
     SUPERUSER = 'root'

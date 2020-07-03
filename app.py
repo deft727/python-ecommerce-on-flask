@@ -772,7 +772,7 @@ def quick():
     price=PROD.price
     nazv=PROD.name
     brand=PROD.brand
-    if phone:
+    if phone and PROD:
         with mail.connect() as conn:
             msg = Message("[ParfumeLover] Быстрый заказ",
             recipients=['zarj09@gmail.com'])
