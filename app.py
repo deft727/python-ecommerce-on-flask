@@ -233,7 +233,6 @@ def index():
     order=request.args.get('sort')
     x=request.form.get("myfilter_brand")
     x2=request.form.get("myfilter_aromat")
-    user_id=current_user.get_id()
 
     if x or x2 is not None:
         if x:
@@ -267,24 +266,23 @@ def index():
 
     cartId=request.form.get('item_to_cart')
 
-###########################################
 
+    user_id=current_user.get_id()
 
+    if   current_user.get_id() is None:
+        u=User.query.filter(User.id>999999).order_by(User.id.desc()).first()
+        if u:
+            user_id=u.id+1
+        else:
+            user_id=1000000
 
-# как отслеживать не зарегестрированых пользователей ?
-
-
-    # if  not current_user.is_authenticated:
-    #     print('asfdafwe')
-    #     user_id=999999
-    #     resp = make_response(redirect('/'))
-    #     resp.set_cookie("anonymousId", str(user_id))
-    #     return resp
-
-###########################################
-    if  cartId and current_user.is_anonymous:
-        return redirect('/register')
-
+  
+    userID = request.cookies.get('userID')
+    if userID is None:
+        resp = make_response(redirect('/'))
+        resp.set_cookie('userID', str(user_id))
+        return resp
+        
     if cartId is not None :
         item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==cartId)).first()
@@ -307,6 +305,7 @@ def index():
     cartProduct= Cart.query.filter_by(userid=user_id).count()
     brand=Products.query.distinct(Products.brand).group_by(Products.brand)
     aromat=Products.query.distinct(Products.aromat).group_by(Products.aromat)
+
     return render_template ('index.html',items=items,title='ParfumeLover',
     colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat,cartProduct=cartProduct)
 
@@ -372,7 +371,7 @@ def register():
     name=Admin()
     search=SearchForm()
     if current_user.is_authenticated:
-        return redirect('/')
+        redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
@@ -407,7 +406,6 @@ def login():
             return redirect (next_page)
         else:
             flash('Логин или пароль неверны','warning')
-
     return render_template('login.html', title='Вход', search=form, form2=form2,admin=name)
 
 
@@ -419,6 +417,7 @@ def logout():
 
 
 @app.route('/remove', methods=['GET'])
+@login_required
 def remove():
     productId = request.args.get('id')
     amd= Cart.query.filter_by(productid=productId).first()
@@ -433,9 +432,6 @@ def remove():
     if art:
         db.session.delete(art)
         db.session.commit()
-
-
-
         return redirect(url_for('index'))
 
 
@@ -451,6 +447,8 @@ def show():
     revs1=request.form.get('Rev')
     otziv=Revs.query.filter_by(product_id=nameId).all()
     user_id=current_user.get_id()
+    if user_id is None:
+        user_id=int(request.cookies.get('userID'))
     cartProduct= Cart.query.filter_by(userid=user_id).count()
 
     if revies.validate_on_submit():
@@ -463,7 +461,7 @@ def show():
             flash('Отзыв добавлен','success')
             return redirect(url_for('show', id=nameId))
         except:
-            return redirect ('/')
+            redirect(url_for('index'))
     
     deletePost=request.form.get('deletePost')
     if deletePost is not None:
@@ -474,7 +472,7 @@ def show():
             flash('Отзыв удален','success')
             return redirect(url_for('show', id=nameId))
         except:
-            return redirect ('/')
+            redirect(url_for('index'))
 
     value=request.form.get('10')
     valuecount=5
@@ -494,8 +492,8 @@ def show():
             valuecount=20
             count=4
     if  addtocart:
-            if  current_user.is_anonymous:
-                return redirect('/register')
+            # if  current_user.is_anonymous:
+            #     return redirect('/register')
             item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==nameId)).first()
             if item is None:
@@ -539,24 +537,20 @@ def cart():
     search=SearchForm()
     name=Admin()
     time=datetime.now()
-    if current_user.is_anonymous:
-        return redirect('/login')
     user_id=current_user.get_id()
+    if user_id is None:
+        user_id=int(request.cookies.get('userID'))
     cart=Cart.query.filter_by(userid=user_id).all()
     cartProduct= Cart.query.filter_by(userid=user_id).count()
-
     value=request.form.get("VALUE")
- 
     totalPrice=0
     discount=0
     for y in cart:
         totalPrice+=y.prods.price*y.quantity
     summ=totalPrice
-
     if totalPrice>1500:
         discount=5
         summ=int(summ-(summ/100*discount))
-
     value=request.form.get("VALUE")
     if value:
         a=value.split('/')
@@ -568,9 +562,8 @@ def cart():
         db.session.commit()
         return redirect(url_for('cart'))
 
-    
     oders=request.form.get('oders')
-    if oders:
+    if oders=='True':
             for i in cart:
                 oder=Oders(productid=i.productid,rebate=discount,price=summ,user_id=user_id,creationData=time,quantity=i.quantity)
                 try:
@@ -579,12 +572,6 @@ def cart():
                     db.session.commit()
                     flash('Спасибо за покупку','success')
                     send_mail()
-
-
-
-#### №№№№№№№№№№№№№№№№№№№№№      как удалить заказы после заказа из корзины?
-
-
                     return redirect(url_for('cart'))
                 except:
                     return redirect(url_for('cart'))
@@ -601,18 +588,18 @@ def cart():
             return redirect(url_for('cart'))
 
     return render_template('cart.html',admin=name,search=search,items=cart,totalPrice=totalPrice,
-    discount=discount,summ=summ,cartProduct=cartProduct)
+    discount=discount,summ=summ,cartProduct=cartProduct,user_id=int(user_id))
 
-#    Oders
- #   query.order_by(id.desc()).first()
+
 def send_mail():
-    userId=current_user.get_id()
-    user= Oders.query.filter_by(user_id=userId).first()
-    price=user.price
+    id=int(current_user.get_id())
+    if id is None:
+        id=int(request.cookies.get('userID'))
+    user=Oders.query.filter_by(user_id=id).order_by(Oders.id.desc()).first()
     with mail.connect() as conn:
         msg = Message("Заказ на сайте ParfumeLover",
         recipients=["zarj09@gmail.com",user.oder.email])
-        msg.html =render_template('mail.html',user=user,price=price)
+        msg.html =render_template('mail.html',user=user)
         conn.send(msg)
 
 
