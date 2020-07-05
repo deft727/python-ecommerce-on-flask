@@ -46,16 +46,17 @@
 						<div class="pull-right">
 							{{ form2.remember(class="form-check-input") }}
 							{{ form2.remember.label(class="form-check-label") }}
-						</div>
-						<div class="pull-right" >
-							{{ form2.submit(class="btn btn-outline-info") }}
-						</div>
-					</fieldset>
-				
+						</div><br><br>
+						
+						<div class="pull-right">
+							<div class="form-group">
+								{{ form2.submit(class="btn btn-outline-info") }}
+							</div></div>
 					<small class="text-muted ml-2">
 						<a href="{{ url_for('reset_password') }}">Забыли пароль?</a>
 					</small>
-				</form>
+				</form>					</fieldset>
+
 			</div>
 			<div class="border-top pt-3">
 				<small class="text-muted">
