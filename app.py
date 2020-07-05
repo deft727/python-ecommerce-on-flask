@@ -207,22 +207,33 @@ class Cart(db.Model):
 
 class Oders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    productid = db.Column(db.Integer, nullable=False)
+    productid = db.Column(db.Integer, db.ForeignKey('products.id'))
     rebate = db.Column(db.Integer, nullable=False)    
     price=db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     creationData = db.Column(db.DateTime)
     quantity=db.Column(db.Integer, nullable=False)
     oder=db.relationship('User',backref='User',lazy=True)
-    #prod = db.relationship('Products',backref='Prod',lazy=True)
+    prod = db.relationship('Products',backref='Prod',lazy=True)
+
+
 class quickorderForm(FlaskForm):
     Name=StringField('Имя', validators=[DataRequired()])
     Phone = IntegerField('Телефон', validators=[DataRequired()])
     submit = SubmitField('Заказать')
 
-@app.errorhandler(404)
+class anonForm(FlaskForm):
+    Name=StringField('Имя', validators=[DataRequired()])
+    lastName=StringField('Фамилия', validators=[DataRequired()])
+    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
+    City=StringField('Город', validators=[DataRequired()])
+    Otdelenie=StringField('Отделение', validators=[DataRequired()])
+    Phone = IntegerField('Телефон', validators=[DataRequired()])
+    submit = SubmitField('Заказать')
+
+@app.errorhandler(404 or 500)
 def page_not_found(error):
-    return "такой страницы нет"
+    return render_template('404.html')
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -267,20 +278,17 @@ def index():
 
     cartId=request.form.get('item_to_cart')
 
-
     user_id=current_user.get_id()
   
     userID = request.cookies.get('userID')
     if userID is None:
-        y=randint(100001, 99999999999999999)
+        y=randint(100001, 999999999999999999999)
         user_id=y
         resp = make_response(redirect('/'))
         resp.set_cookie('userID', str(y))
         return resp
     if user_id is None:
         user_id=int(userID)
-
-
 
     if cartId is not None :
         item = db.session.query(Cart).filter(
@@ -537,6 +545,8 @@ def cart():
     name=Admin()
     time=datetime.now()
     user_id=current_user.get_id()
+    anon=anonForm()
+
     if user_id is None:
         user_id=int(request.cookies.get('userID'))
     cart=Cart.query.filter_by(userid=user_id).all()
@@ -565,8 +575,8 @@ def cart():
     if oders=='True':
             for i in cart:
                 oder=Oders(productid=i.productid,rebate=discount,price=summ,user_id=user_id,creationData=time,quantity=i.quantity)
+                db.session.add(oder)
                 try:
-                    db.session.add(oder)
                     db.session.query(Cart).filter(Cart.userid==user_id).delete()
                     db.session.commit()
                     flash('Спасибо за покупку','success')
@@ -574,7 +584,29 @@ def cart():
                     return redirect(url_for('cart'))
                 except:
                     return redirect(url_for('cart'))
-                
+
+    if anon.validate_on_submit():
+        name=request.form.get('Name')
+        email=request.form.get('email')
+        lastName=request.form.get('lastName')
+        Phone=request.form.get('Phone')
+        City=request.form.get('City')
+        Otdelenie=request.form.get('Otdelenie')
+        for i in cart:
+            oder=Oders(productid=i.productid,rebate=discount,price=summ,user_id=user_id,creationData=time,quantity=i.quantity)
+            db.session.add(oder)
+
+        flash('Спасибо за покупку','success')
+
+        try:
+            db.session.query(Cart).filter(Cart.userid==user_id).delete()
+            db.session.commit()
+        except:
+            return redirect(url_for('cart'))
+
+        anonMail(name,email,lastName,Phone,City,Otdelenie)
+        return redirect(url_for('cart'))
+   
     deleteFromCart=request.form.get('deleteFromCart')
     if deleteFromCart is not None:
         deletecart=db.session.query(Cart).filter(
@@ -587,19 +619,33 @@ def cart():
             return redirect(url_for('cart'))
 
     return render_template('cart.html',admin=name,search=search,items=cart,totalPrice=totalPrice,
-    discount=discount,summ=summ,cartProduct=cartProduct,user_id=int(user_id))
+    discount=discount,summ=summ,cartProduct=cartProduct,user_id=int(user_id),anon=anon)
 
+
+def anonMail(name,email,lastName,Phone,City,Otdelenie):
+    id=int(request.cookies.get('userID'))
+    oder=Oders.query.filter_by(user_id=id).all()
+    with mail.connect() as conn:
+        msg = Message("Заказ на сайте ParfumeLover АНОН",
+        recipients=["zarj09@gmail.com",email])
+        msg.html =render_template('anonOder.html',name=name,lastName=lastName,
+        Phone=Phone,City=City,Otdelenie=Otdelenie,oder=oder)
+        conn.send(msg)
+    db.session.query(Oders).filter(Oders.user_id==id).delete()
+    db.session.commit()
 
 def send_mail():
     id=int(current_user.get_id())
     if id is None:
         id=int(request.cookies.get('userID'))
-    user=Oders.query.filter_by(user_id=id).order_by(Oders.id.desc()).first()
+    user=Oders.query.filter_by(user_id=id).all()
     with mail.connect() as conn:
         msg = Message("Заказ на сайте ParfumeLover",
-        recipients=["zarj09@gmail.com",user.oder.email])
+        recipients=["zarj09@gmail.com",user[0].oder.email])
         msg.html =render_template('mail.html',user=user)
         conn.send(msg)
+    db.session.query(Oders).filter(Oders.user_id==id).delete()
+    db.session.commit()
 
 
 @app.route('/reset_password',methods=['GET', 'POST'])
@@ -744,6 +790,7 @@ def edit_profile():
 @app.route('/resume')
 def resume():
     return render_template('resume.html')
+
 @app.route('/aboutUs')
 def about():
     search=SearchForm()

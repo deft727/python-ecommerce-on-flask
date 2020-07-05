@@ -1,6 +1,16 @@
-<p>Уважаемый <b>{{user.oder.username}}</b> ваш заказ на сумму <b>{{user.price}} грн</b> принят!</p>
-<p>В ближайшее время с вами свяжется наш менеджер.</p>
-<p>Ваши данные для отпарвки:</p> 
-<p><b>Телефон:</b>{{user.oder.phone}}.</p>
-<p><b>Город:</b> {{user.oder.city}}.</p>
-<p><b>Отделение:</b> {{user.oder.otdel}}.</p>
+уважаемый , {{user[0].oder.username}} , Вы сделали заказ на сайте <a href="https://parfumelover.herokuapp.com/">ParfumeLover</a>
+
+на сумму    {{user[0].price}}
+
+Информация о доставке:
+
+Тел : {{user[0].oder.phone}}
+
+Город {{user[0].oder.city}}
+
+Отдел НП: {{user[0].oder.otdel}}
+Купленые товары:
+
+{%for i in user%}
+<b>{{i.prod.brand}}</b>,<b>{{i.prod.name}}</b>   {{i.quantity*5}} мл
+{%endfor%}
