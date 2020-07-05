@@ -282,6 +282,8 @@ def index():
         resp = make_response(redirect('/'))
         resp.set_cookie('userID', str(user_id))
         return resp
+    else:
+        user_id=int(userID)+1
         
     if cartId is not None :
         item = db.session.query(Cart).filter(
