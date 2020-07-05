@@ -231,7 +231,7 @@ class anonForm(FlaskForm):
     Phone = IntegerField('Телефон', validators=[DataRequired()])
     submit = SubmitField('Заказать')
 
-@app.errorhandler(404 or 500)
+@app.errorhandler(404)
 def page_not_found(error):
     return render_template('404.html')
 
