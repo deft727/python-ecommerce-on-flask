@@ -19,6 +19,7 @@ from werkzeug.utils import secure_filename
 from time import time
 import jwt
 from flask import make_response
+from random import randint
 
 
 app = Flask(__name__)
@@ -268,23 +269,19 @@ def index():
 
 
     user_id=current_user.get_id()
-
-    if   current_user.get_id() is None:
-        u=User.query.filter(User.id>999999).order_by(User.id.desc()).first()
-        if u:
-            user_id=u.id+1
-        else:
-            user_id=1000000
-
   
     userID = request.cookies.get('userID')
     if userID is None:
+        y=randint(100001, 99999999999999999)
+        user_id=y
         resp = make_response(redirect('/'))
-        resp.set_cookie('userID', str(user_id))
+        resp.set_cookie('userID', str(y))
         return resp
-    else:
-        user_id=int(userID)+1
-        
+    if user_id is None:
+        user_id=int(userID)
+
+
+
     if cartId is not None :
         item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==cartId)).first()
