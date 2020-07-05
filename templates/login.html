@@ -47,10 +47,11 @@
 							{{ form2.remember(class="form-check-input") }}
 							{{ form2.remember.label(class="form-check-label") }}
 						</div>
+						<div class="pull-right" >
+							{{ form2.submit(class="btn btn-outline-info") }}
+						</div>
 					</fieldset>
-					<div class="pull-right" >
-						{{ form2.submit(class="btn btn-outline-info") }}
-					</div>
+				
 					<small class="text-muted ml-2">
 						<a href="{{ url_for('reset_password') }}">Забыли пароль?</a>
 					</small>
