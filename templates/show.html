@@ -38,13 +38,10 @@
                 </div>
             </div>
         </div>
-
-
-        
         <div class="col-md-6 mb-4">
           <div class="p-4">
             <h1>{{content.name}}</h1>
-            <p >{{content.brand}}</p>
+            <p class="mb-1"><em>{{content.brand}}</p></em>
                 {%if count%}
                 <span  class="display-4"  >{{content.price*count}} грн</span>
                 {%else%}
@@ -54,7 +51,7 @@
             <form action="/show?id={{content.id}}" method="POST" >
               <form action="" method="POST" name="10">
               <div class="btn-group">
-                <button type="button"   class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button"   class="btn btn-secondary dropdown-toggle m-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   {{valuecount}} мл
                 </button>
                 <div class="dropdown-menu" >
@@ -63,11 +60,56 @@
                   <button class="dropdown-item"  name='10' value='15'>15 мл</button> 
                   <button class="dropdown-item" name='10' value='20'>20 мл</button>
               </div> 
-              <button name='add_to_cart' value={{count}} class="btn btn-primary">Добавить
+              <button name='add_to_cart' value={{count}} class="btn btn-primary m-1">Добавить 
                  <i class="fas fa-shopping-cart ml-1"></i>
               </button>
             </form> 
           </div>
+
+
+          <button type="button" class="btn btn-outline-warning m-1" data-toggle="modal" data-target="#exampleModal">
+           Быстрый заказ <i class="fa fa-mobile" aria-hidden="true"></i>
+
+          </button>
+          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="exampleModalLabel">Быстрый заказ</h2>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="/quickorder"  method="POST">
+                    <div class="form-group">
+                      <label for="formGroupExampleInput">Имя</label>
+                      <input type="text" class="form-control" name="quickordername" id="formGroupExampleInput" placeholder="Введите Ваше имя">
+                    </div>
+                    <div class="form-group">
+                      <label for="formGroupExampleInput2">Телефон</label>
+                      <input type="text" class="form-control" name="quickorderphone" id="formGroupExampleInput2" placeholder="8050234567">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                  <button type="submit" class="btn btn-success" name="quickID" value="{{content.id}}">Заказать</button>
+                </div>
+                </div>
+              </form>
+                </div>
+                
+            </div>
+          </div>
+
+
+
+
+
+
+
                 </div>
               </div>
               <table class="table table-bordered">

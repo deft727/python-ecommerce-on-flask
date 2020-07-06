@@ -127,13 +127,33 @@
 						</div>
 						<div class="modal-body">
 							<form action="/quickorder"  method="POST">
+								{{ quick.hidden_tag() }}
+								{{ quick.Name.label(for="formGroupExampleInput") }}
+
+								{% if quick.Name.errors %}
+									{{ quick.Name(class="form-control form-control-lg is-invalid") }}
+									<div class="invalid-feedback">
+										{% for error in quick.Name.errors %}
+											<span>{{ error }}</span>
+										{% endfor %}
+									</div>
+								{% else %}
+									{{ quick.Name(class="form-control form-control") }}
+								{% endif %}
 								<div class="form-group">
-								  <label for="formGroupExampleInput">Имя</label>
-								  <input type="text" class="form-control" name="quickordername" id="formGroupExampleInput" placeholder="Введите Ваше имя">
-								</div>
-								<div class="form-group">
-								  <label for="formGroupExampleInput2">Телефон</label>
-								  <input type="text" class="form-control" name="quickorderphone" id="formGroupExampleInput2" placeholder="8050234567">
+								  
+									{{ quick.Phone.label(for="formGroupExampleInput") }}
+
+									{% if quick.Phone.errors %}
+										{{ quick.Phone(class="form-control form-control-lg is-invalid") }}
+										<div class="invalid-feedback">
+											{% for error in quick.Phone.errors %}
+												<span>{{ error }}</span>
+											{% endfor %}
+										</div>
+									{% else %}
+										{{ quick.Phone(class="form-control form-control") }}
+									{% endif %}
 								</div>
 						</div>
 						<div class="modal-footer">

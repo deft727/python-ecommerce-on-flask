@@ -37,6 +37,8 @@ login_manager.login_message_category = 'info'
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(40), unique=True, nullable=False)
+    name = db.Column(db.String(40),  nullable=False)
+    lastname = db.Column(db.String(40),  nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     user_img = db.Column(db.String(60), nullable=True)
@@ -101,19 +103,21 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField('Изменить пароль')
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Имя', validators=[DataRequired(), Length(min=4)])
-    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    confirmPassword = PasswordField('Подтвердите пароль', validators=[DataRequired(), EqualTo('password')])
-    city = StringField('Город', validators=[DataRequired()])
-    otdel=StringField('Отделение', validators=[DataRequired()])
-    phone = TelField('Телефон')
+    username = StringField('Логин', validators=[DataRequired(), Length(min=4)],render_kw={"placeholder": "Введите логин"})
+    name = StringField('Имя', validators=[DataRequired(), Length(min=4)],render_kw={"placeholder": "Введите Имя"})
+    lastname = StringField('Фамилия', validators=[DataRequired(), Length(min=4)],render_kw={"placeholder": "Введите фамилию"})
+    email = StringField('Электронная почта', validators=[DataRequired(), Email()],render_kw={"placeholder": "example@gmail.com"})
+    password = PasswordField('Пароль', validators=[DataRequired()],render_kw={"placeholder": "*****"})
+    confirmPassword = PasswordField('Подтвердите пароль', validators=[DataRequired(), EqualTo('password')],render_kw={"placeholder": "*****"})
+    city = StringField('Город', validators=[DataRequired()],render_kw={"placeholder": "Харьков"})
+    otdel=StringField('Отделение', validators=[DataRequired()],render_kw={"placeholder": "78"})
+    phone = TelField('Телефон',render_kw={"placeholder": "80501111111"})
     submit = SubmitField('Зарегистрироваться')
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
-            raise ValidationError('Такое имя уже существует')
+            raise ValidationError('Такой логин уже существует')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
@@ -127,23 +131,24 @@ class RegistrationForm(FlaskForm):
 
 
 class EditProfileForm(FlaskForm):
-    username = StringField('Имя', validators=[DataRequired(), Length(min=4)])
+    user = StringField('Логин', validators=[DataRequired(), Length(min=4)])
+    name = StringField('Имя', validators=[DataRequired(), Length(min=4)])
+    lastname = StringField('Фамилия', validators=[DataRequired(), Length(min=4)])
     email = StringField('Электроная почта', validators=[DataRequired(), Email()])
     city = StringField('Город', validators=[DataRequired()])
     otdel=StringField('Отделение', validators=[DataRequired()])
     phone = TelField('Телефон')
     submit = SubmitField('Изменить')
     
-    # def validate_username(self, username):
-    #     user = User.query.filter_by(username=username.data).first()
-    #     print(user.username,',///',username.data)
-    #     if user:
-    #         raise ValidationError('Такое имя уже существует')
+    def validate_user(self, user):
+        username = User.query.filter_by(username=user.data).first()
+        if username:
+            raise ValidationError('Такой логин существует')
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
+    email = StringField('Электроная почта', validators=[DataRequired(), Email()],render_kw={"placeholder": "example@gmail.com"})
+    password = PasswordField('Пароль', validators=[DataRequired()],render_kw={"placeholder": "*****"})
     remember = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
 
@@ -218,18 +223,24 @@ class Oders(db.Model):
 
 
 class quickorderForm(FlaskForm):
-    Name=StringField('Имя', validators=[DataRequired()])
-    Phone = IntegerField('Телефон', validators=[DataRequired()])
-    submit = SubmitField('Заказать')
+    Name=StringField('Имя', validators=[DataRequired()],render_kw={"placeholder": "Введите Ваше Имя"})
+    Phone = IntegerField('Телефон', validators=[DataRequired()],render_kw={"placeholder": "8050111111"})
+
+
 
 class anonForm(FlaskForm):
-    Name=StringField('Имя', validators=[DataRequired()])
-    lastName=StringField('Фамилия', validators=[DataRequired()])
-    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
-    City=StringField('Город', validators=[DataRequired()])
-    Otdelenie=StringField('Отделение', validators=[DataRequired()])
-    Phone = IntegerField('Телефон', validators=[DataRequired()])
+    Name=StringField('Имя', validators=[DataRequired()],render_kw={"placeholder": "Имя"})
+    lastName=StringField('Фамилия', validators=[DataRequired()],render_kw={"placeholder": "Фамилия"})
+    email = StringField('Электроная почта', validators=[DataRequired(), Email()],render_kw={"placeholder": "example@gmail.com"})
+    City=StringField('Город', validators=[DataRequired()],render_kw={"placeholder": "Город"})
+    Otdelenie=StringField('Отделение', validators=[DataRequired()],render_kw={"placeholder": "50"})
+    Phone = IntegerField('Телефон', validators=[DataRequired()],render_kw={"placeholder": "8050111111"})
     submit = SubmitField('Заказать')
+    def validate_Phone(self, Phone):
+        x=str(Phone.data)
+        if len(x)<8:
+            raise ValidationError('неверный формат телефона')
+
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -245,7 +256,7 @@ def index():
     order=request.args.get('sort')
     x=request.form.get("myfilter_brand")
     x2=request.form.get("myfilter_aromat")
-
+    quick=quickorderForm()
     if x or x2 is not None:
         if x:
             items=Products.query.filter(Products.brand.contains(x))
@@ -314,7 +325,7 @@ def index():
     aromat=Products.query.distinct(Products.aromat).group_by(Products.aromat)
 
     return render_template ('index.html',items=items,title='ParfumeLover',
-    colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat,cartProduct=cartProduct)
+    colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat,cartProduct=cartProduct,quick=quick)
 
 
 @app.route('/add', methods=['GET', 'POST'])
@@ -385,7 +396,7 @@ def register():
         city=form.city.data
         otdel=form.otdel.data
         phone=form.phone.data
-        user = User(username=form.username.data, email=form.email.data,
+        user = User(username=form.username.data,name=form.name.data,lastname=form.lastname.data, email=form.email.data,
                     password=hashed_password,city=city,otdel=otdel,phone=phone)
         
         db.session.add(user)
@@ -401,7 +412,7 @@ def login():
     name=Admin()
     form=SearchForm()
     if current_user.is_authenticated:
-        return redirect('/')
+        return redirect(url_for('index'))
     form2=LoginForm()
     if form2.validate_on_submit():
         user = User.query.filter_by(email=form2.email.data).first()
@@ -499,8 +510,7 @@ def show():
             valuecount=20
             count=4
     if  addtocart:
-            # if  current_user.is_anonymous:
-            #     return redirect('/register')
+
             item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==nameId)).first()
             if item is None:
@@ -514,7 +524,6 @@ def show():
                 db.session.commit()
                 flash('Товар успешно добавлен в корзину','success')
                 return redirect(url_for('show', id=nameId))
-
     return render_template('show.html', search=search,title=content.name,content=content,
     admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount)
 
@@ -535,7 +544,6 @@ def profile():
             return redirect ('/profile')
         except:
             return redirect ('/profile')
-
     return render_template ('profile.html',admin=name,search=search,user=profileUser,otzivy=otzivy)
 
 
@@ -546,7 +554,6 @@ def cart():
     time=datetime.now()
     user_id=current_user.get_id()
     anon=anonForm()
-
     if user_id is None:
         user_id=int(request.cookies.get('userID'))
     cart=Cart.query.filter_by(userid=user_id).all()
@@ -667,7 +674,6 @@ def reset_password():
 
 def send_password_reset_email(user):
     token = user.get_reset_password_token()
-
     with mail.connect() as conn:
         msg = Message("[ParfumeLovwe] Сброс пароля",
         recipients=[user.email])
@@ -699,7 +705,6 @@ def edit():
     name=nameAdmin.name
     art=Products.query.filter_by(id=request.args.get('id')).first()
     time = datetime.now()
-
     if current_user.username==name:
         form =ProductsForm()
         form.brand.data=art.brand
@@ -724,17 +729,17 @@ def edit():
             image = Image.open(f1)
             size=480,480
             image = image.resize(size)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname1))
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname1 ))
         if f2:
             image = Image.open(f2)
             size=480,480
             image = image.resize(size)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname2))
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname2 ))
         if f3:
             image = Image.open(f3)
             size=480,480
             image = image.resize(size)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname3))
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], fname3 ))
 
         if form.validate_on_submit():
             art.brand=request.form.get('brand')
@@ -769,14 +774,16 @@ def edit_profile():
     iduser=current_user.get_id()
     profile=User.query.filter_by(id=iduser).first()
     if profile:
-        form.username.data=profile.username
+        form.name.data=profile.name
+        form.lastname.data=profile.lastname
         form.email.data=profile.email
         form.city.data=profile.city
         form.otdel.data=profile.otdel
         form.phone.data=profile.phone
         if form.validate_on_submit():
-            profile.username=request.form.get('username')
-            x=request.form.get('username')
+            profile.username=request.form.get('user')
+            profile.name=request.form.get('name')
+            profile.lastname=request.form.get('lastname')
             profile.email=request.form.get('email')
             profile.city=request.form.get('city')
             profile.otdel=request.form.get('otdel')
@@ -791,16 +798,18 @@ def edit_profile():
 def resume():
     return render_template('resume.html')
 
+
 @app.route('/aboutUs')
 def about():
     search=SearchForm()
     name=Admin()
     return render_template('aboutUs.html',search=search,admin=name,title='AboutUs')
 
+
 @app.route('/quickorder', methods=['POST'])
 def quick():
-    name=request.form.get('quickordername')
-    phone=request.form.get('quickorderphone')
+    name=request.form.get('Name')
+    phone=request.form.get('Phone')
     ID=request.form.get('quickID')
     time=datetime.now()
     PROD=Products.query.filter_by(id=ID).first()
