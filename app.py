@@ -129,6 +129,10 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError('Такой номер телефона уже существует')
 
+    def validate_password(self, password):
+        x=len(str(password.data))
+        if x<4:
+            raise ValidationError('Минимум 4 символа')
 
 class EditProfileForm(FlaskForm):
     user = StringField('Логин', validators=[DataRequired(), Length(min=4)])
