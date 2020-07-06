@@ -21,12 +21,12 @@
 			<form  action="" method="POST">
 		<article class="filter-group">
 			<header class="card-header">
-				<a href="#" data-toggle="collapse" data-target="#collapse_2" aria-expanded="true" class="">
+				<a  data-toggle="collapse" data-target="#collapse_2" aria-expanded="false" >
 					<i class="icon-control fa fa-chevron-down"></i>
-					<h6 class="title">Бренды</h6>
+					<p class="text-info">Бренды</p>
 				</a>
 			</header>
-			<div class="filter-content collapse show" id="collapse_2" >
+			<div class="filter-content collapse in" id="collapse_2" >
 				<div class="card-body">
 					<div class="card-body"> 
 						{%for brand in brand%} 
@@ -39,9 +39,9 @@
 		</article> 
 		<article class="filter-group">
 			<header class="card-header">
-				<a href="#" data-toggle="collapse" data-target="#collapse_5" aria-expanded="false" class="">
+				<a data-toggle="collapse" data-target="#collapse_5" aria-expanded="false" >
 					<i class="icon-control fa fa-chevron-down"></i>
-					<h6 class="title"> Выбрать тип аромата </h6>
+					<p class="text-info"> Выбрать тип аромата </p>
 				</a>
 			</header>
 			<div class="filter-content collapse in" id="collapse_5">
@@ -87,7 +87,6 @@
 				
 			</div>
 	</header>
-
 {%endblock%}	
 
 {% block body %}
@@ -121,7 +120,7 @@
 					<div class="modal-dialog modal-dialog-centered" role="document">
 					  <div class="modal-content">
 						<div class="modal-header">
-						  <h5 class="modal-title" id="exampleModalLongTitle">Быстрый заказ</h5>
+						  <p class="modal-title" id="exampleModalLongTitle">Быстрый заказ</p>
 						  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							<span aria-hidden="true">&times;</span>
 						  </button>
@@ -157,7 +156,9 @@
 					</div>
 				</div>
 				<form action="" method="POST">
-			</figcaption> <button name="item_to_cart" value={{item.id}} class="btn btn-outline-success">Добавить</button>	</form>
+			</figcaption> <button name="item_to_cart" value={{item.id}} class="btn btn-outline-success">Добавить
+				<i class="fas fa-shopping-cart ml-1"></i>
+			</button>	</form>
 		</figure>
 	</div>	
 	{% endfor %}
@@ -192,5 +193,3 @@
 	  </nav>
 
 	  {% endblock %}
-
-

@@ -468,7 +468,7 @@ p:last-child {
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.3);
   position: absolute;
-  z-index: 9;
+  z-index: 11;
   position: absolute; }
   .slider-banner-slick .slick-prev:before, .slider-banner-slick .slick-next:before {
     display: none; }

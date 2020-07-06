@@ -8,18 +8,15 @@
 
 {% block body %}
 
-
-<!-- ========================= SECTION CONTENT ========================= -->
 <section class="section-content padding-y">
 
-<!-- ============================ COMPONENT REGISTER   ================================= -->
 	<div class="card mx-auto" style="max-width:520px; margin-top:40px;">
       <article class="card-body">
 	
 		<form method="POST" action="" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Register</legend>
+                <h1 class="border-bottom mb-4">Регистрация</h1>
                 <div class="form-group">
                     {{ form.username.label(class="form-control-label") }}
 
