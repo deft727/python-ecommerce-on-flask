@@ -51,19 +51,28 @@
 		    </div>
 		</form> 
 	</div> 
-	<div class="col-lg-4 col-sm-6 col-12">
-		<div class="widgets-wrap float-md-right">
-			<div class="widget-header  mr-3">
-				<a href="/cart" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
-				<span class="badge badge-pill badge-danger notify">{%block cart%}{%endblock%}</span>
-			</div>
+
 			<div class="widget-header icontext">
+
+<div class="dropdown show">
+	<a  class="icon icon-sm rounded-circle border"role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
+	</a>
+
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <a class="dropdown-item" href="/aboutUs">О Магазине</a>
+    <a class="dropdown-item" href="/delivery">Доставка и оплата</a>
+    <a class="dropdown-item" href="#">Контакты</a>
+  </div>
+</div></div>
+
 				{% if current_user.is_authenticated %}
+				<div class="widget-header icontext">
 
 				<a href="/profile" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
 				<div class="text">
 					<span class="text-muted">Welcome {{current_user.username}}</span>
-					<div> 
+					<div> 				<div class="widget-header icontext">
+
 						<a href="/logout"> Выйти</a>
 						{% else %}
 
@@ -71,12 +80,12 @@
                         <a href="/login"  style='padding-right: 5px;'>Войти</a>  
 						<a href="/register" style='padding-left: 4px;'> Зарегистрироваться</a>
 						{% endif %}
-
-				{% if current_user.username==admin.name%}
+						</div>		
+		{% if current_user.username==admin.name%}
 						<a href="/add"> | Добавить товар</a>
 						{% endif %}
 
-
+					</div>
 					</div>
 				</div>
 			</div>
@@ -137,7 +146,7 @@
 	<div class="thumb-content"><a href="/aboutUs">О Магазине</a></div>	
 	</li>
 	<li>
-	<div class="thumb-content"><a href="#.">Доставка и оплата</a></div>	
+	<div class="thumb-content"><a href="/delivery">Доставка и оплата</a></div>	
 	</li>
 	<li>
 	<div class="thumb-content"><a href="#.">Success Stories</a></div>	

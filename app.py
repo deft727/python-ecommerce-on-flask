@@ -832,6 +832,12 @@ def quick():
     flash('Заказ принят в ближайшее время я с Вами свяжусь :)','success')
     return redirect('/')
 
+@app.route('/delivery')
+def delivery():
+    search=SearchForm()
+    name=Admin()
+    return render_template('delivery.html',search=search,admin=name,title='Delivery')
+
 if __name__ == '__main__':
     app.run(debug=True)
 #
