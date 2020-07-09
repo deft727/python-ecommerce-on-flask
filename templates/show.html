@@ -42,12 +42,13 @@
           <div class="p-4">
             <h1>{{content.name}}</h1>
             <p class="mb-1"><em>{{content.brand}}</p></em>
-                {%if count%}
-                <span  class="display-4"  >{{content.price*count}} грн</span>
-                {%else%}
-                <span  class="display-4"  >{{content.price}} грн</span>
-                {%endif%}
+               
             <p class="mytxt">{{content.characteristics}}</p>
+            {%if count%}
+            <span  class="display-4"  >{{content.price*count}} грн</span>
+            {%else%}
+            <span  class="display-4"  >{{content.price}} грн</span>
+            {%endif%}
             <form action="/show?id={{content.id}}" method="POST" >
               <form action="" method="POST" name="10">
               <div class="btn-group">
