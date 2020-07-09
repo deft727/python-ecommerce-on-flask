@@ -117,27 +117,7 @@
 
 
 
-  <script type="text/javascript">
-	$(function() {
-	 $.fn.scrollToTop = function() {
-	  $(this).hide();
-	  if ($(window).scrollTop() >= 250) $(this).fadeIn("slow")
-	  var scrollDiv = $(this);
-	  $(window).scroll(function() {
-	   if ($(window).scrollTop() <= 250) $(scrollDiv).fadeOut("slow")
-	   else $(scrollDiv).fadeIn("slow")
-	  });
-	  $(this).click(function() {
-	   $("html, body").animate({scrollTop: 0}, "slow")
-	  })
-	 }
-	});
-	
-	$(function() {
-	 $("#Go_Top").scrollToTop();
-	});
 
-	</script>
 
 	</main> 
 
@@ -208,5 +188,25 @@
 	</div>
 	</footer>
 
+<script type="text/javascript">
+	$(function() {
+	 $.fn.scrollToTop = function() {
+	  $(this).hide();
+	  if ($(window).scrollTop() >= 250) $(this).fadeIn("slow")
+	  var scrollDiv = $(this);
+	  $(window).scroll(function() {
+	   if ($(window).scrollTop() <= 250) $(scrollDiv).fadeOut("slow")
+	   else $(scrollDiv).fadeIn("slow")
+	  });
+	  $(this).click(function() {
+	   $("html").animate({scrollTop: 0}, "slow")
+	  })
+	 }
+	});
+	
+	$(function() {
+	 $("#Go_Top").scrollToTop();
+	});
 
+	</script>
 </body></html>
