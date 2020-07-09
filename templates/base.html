@@ -113,10 +113,31 @@
 
 
 
-  {% block body %}
+  {% block body %}{% endblock %}
 
 
 
+  <script type="text/javascript">
+	$(function() {
+	 $.fn.scrollToTop = function() {
+	  $(this).hide();
+	  if ($(window).scrollTop() >= 250) $(this).fadeIn("slow")
+	  var scrollDiv = $(this);
+	  $(window).scroll(function() {
+	   if ($(window).scrollTop() <= 250) $(scrollDiv).fadeOut("slow")
+	   else $(scrollDiv).fadeIn("slow")
+	  });
+	  $(this).click(function() {
+	   $("html, body").animate({scrollTop: 0}, "slow")
+	  })
+	 }
+	});
+	
+	$(function() {
+	 $("#Go_Top").scrollToTop();
+	});
+
+	</script>
 
 	</main> 
 
@@ -145,9 +166,6 @@
 	</li>
 	<li>
 	<div class="thumb-content"><a href="/delivery">Доставка и оплата</a></div>	
-	</li>
-	<li>
-	<div class="thumb-content"><a href="#.">Success Stories</a></div>	
 	</li>
 
 	</ul>
@@ -190,26 +208,5 @@
 	</div>
 	</footer>
 
-<script type="text/javascript">
-	$(function() {
-	 $.fn.scrollToTop = function() {
-	  $(this).hide();
-	  if ($(window).scrollTop() >= 250) $(this).fadeIn("slow")
-	  var scrollDiv = $(this);
-	  $(window).scroll(function() {
-	   if ($(window).scrollTop() <= 250) $(scrollDiv).fadeOut("slow")
-	   else $(scrollDiv).fadeIn("slow")
-	  });
-	  $(this).click(function() {
-	   $("html, body").animate({scrollTop: 0}, "slow")
-	  })
-	 }
-	});
-	
-	$(function() {
-	 $("#Go_Top").scrollToTop();
-	});
 
-	</script>
-{% endblock %}
 </body></html>
