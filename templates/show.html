@@ -17,13 +17,13 @@
             <div class="container text-center">
                 <div id="carousel" class="carousel slide"  data-interval="10000"  data-ride="carouse1" >  {%if content.img1%}
                     <div class="carousel-inner" >
-                        <div class="carousel-item active" style="transition: transform 2s ease, opacity .5s ease-out">
+                        <div class="carousel-item active" style="transition: transform 1s ease, opacity .5s ease-out">
                             <img class="img-fluid w-100"  src="/static/images/{{content.img1}}" alt="{{content.alt_txt}}">
                         </div>{%endif%}  {%if content.img2%}
-                        <div class="carousel-item" style="transition: transform 2s ease, opacity .5s ease-out">
+                        <div class="carousel-item" style="transition: transform 1s ease, opacity .5s ease-out">
                             <img  class="img-fluid w-100"  src="/static/images/{{content.img2}}" alt="{{content.alt_txt}}">
                         </div>{%endif%} {%if content.img3%}
-                        <div class="carousel-item"style="transition: transform 2s ease, opacity .5s ease-out">
+                        <div class="carousel-item"style="transition: transform 1s ease, opacity .5s ease-out">
                             <img  class="img-fluid w-100"  src="/static/images/{{content.img3}}" alt="{{content.alt_txt}}">
                         </div>{%endif%} 
                     </div>
@@ -41,7 +41,7 @@
         <div class="col-md-6 mb-4">
           <div class="p-4">
             <h1>{{content.name}}</h1>
-            <p class="mb-1"><em>{{content.brand}}</p></em>
+            <p class="mb-2"><em>{{content.brand}}</p></em>
                
             <p class="mytxt">{{content.characteristics}}</p>
             {%if count%}
@@ -121,7 +121,7 @@
                 </thead>
                 <tbody>
                   <tr>
-                     <td> {{content.content}} </td>
+                     <td class="font-italic"> {{content.content}} </td>
                   </tr>
                 </tbody>
               </table>
@@ -137,7 +137,7 @@
           <td  class="text-primary">{{i.author}} , <small class="text-muted">{{i.creationData}}</small>
           </tr>
         <tr>
-          <td class="font-italic">{{i.otziv}}
+          <td class="font-weight-normal">{{i.otziv}}
             {% if current_user.username==admin.name or current_user.username == i.author%}
            <form action="" method="POST">
               <button  name="deletePost" value={{i.id}} class="btn btn-light float-right">удалить</button>

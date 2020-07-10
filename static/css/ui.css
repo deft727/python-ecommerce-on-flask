@@ -1253,8 +1253,6 @@ transition: all 250ms ease-in-out 0s;
 
 }
 
-
-
 .reset_password{
   margin-top: 100px;
   margin-bottom: 150px;
@@ -1264,4 +1262,3 @@ transition: all 250ms ease-in-out 0s;
 .uppbottom{position: fixed; bottom: 25px; right: 1px; cursor: pointer; margin-right: 20px;}
 .formbtm{margin-left: 80%; padding-top: 5px;}
 .editbtm{margin-left: 85%; padding-top: 5px;}
-.
