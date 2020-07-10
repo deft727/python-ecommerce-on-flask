@@ -838,6 +838,12 @@ def delivery():
     name=Admin()
     return render_template('delivery.html',search=search,admin=name,title='Delivery')
 
+@app.route('/contacts')
+def contacts():
+    search=SearchForm()
+    name=Admin()
+    return render_template('contacts.html',search=search,admin=name,title='Contacts')
+
 if __name__ == '__main__':
     app.run(debug=True)
 #
