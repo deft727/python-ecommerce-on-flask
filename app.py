@@ -466,7 +466,6 @@ def remove():
 
 
 @app.route('/show',methods=['GET', 'POST'])
-@cache.cached(timeout=60*24)
 def show():
     form=Reviews()
     name=Admin()
