@@ -41,7 +41,7 @@ Compress(app)
 
 config = {
     "CACHE_TYPE": "simple", 
-    "CACHE_DEFAULT_TIMEOUT": 60*24
+    "CACHE_DEFAULT_TIMEOUT": 60*180
 }
 app.config.from_mapping(config)
 cache = Cache(app)
