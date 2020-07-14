@@ -1,4 +1,4 @@
-уважаемый , {{user[0].oder.username}} , Вы сделали заказ на сайте <a href="https://parfumelover.herokuapp.com/">ParfumeLover</a>
+Уважаемый , {{user[0].oder.username}} , Вы сделали заказ на сайте <a href="https://parfumelover.herokuapp.com/">ParfumeLover</a>
 
 на сумму    {{user[0].price}}
 
@@ -12,5 +12,5 @@
 Купленые товары:
 
 {%for i in user%}
-<b>{{i.prod.brand}}</b>,<b>{{i.prod.name}}</b>   {{i.quantity*5}} мл
+<b>{{i.prod.brand}}</b>, <b>{{i.prod.name}}</b>   {{i.quantity*5}} мл
 {%endfor%}

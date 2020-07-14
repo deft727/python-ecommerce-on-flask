@@ -93,7 +93,7 @@ class Products(db.Model):
         return f'<Products{self.content}>'
 
 class  ResetPasswordRequestForm(FlaskForm):
-    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
+    email = StringField('Электронная почта', validators=[DataRequired(), Email()])
     submit = SubmitField('сбросить пароль')
 
 class ResetPasswordForm(FlaskForm):
@@ -138,7 +138,7 @@ class EditProfileForm(FlaskForm):
     user = StringField('Логин', validators=[DataRequired(), Length(min=4)])
     name = StringField('Имя', validators=[DataRequired(), Length(min=4)])
     lastname = StringField('Фамилия', validators=[DataRequired(), Length(min=4)])
-    email = StringField('Электроная почта', validators=[DataRequired(), Email()])
+    email = StringField('Электронная почта', validators=[DataRequired(), Email()])
     city = StringField('Город', validators=[DataRequired()])
     otdel=StringField('Отделение', validators=[DataRequired()])
     phone = TelField('Телефон')
@@ -151,7 +151,7 @@ class EditProfileForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Электроная почта', validators=[DataRequired(), Email()],render_kw={"placeholder": "example@gmail.com"})
+    email = StringField('Электронная почта', validators=[DataRequired(), Email()],render_kw={"placeholder": "example@gmail.com"})
     password = PasswordField('Пароль', validators=[DataRequired()],render_kw={"placeholder": "*****"})
     remember = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
@@ -294,10 +294,14 @@ def index():
     cartId=request.form.get('item_to_cart')
 
     user_id=current_user.get_id()
-  
     userID = request.cookies.get('userID')
+    users=[]
     if userID is None:
         y=randint(100001, 99999999999)
+        for i in users:
+            if userID==i:
+                y=randint(100001, 99999999999)
+        users.append(y)
         user_id=y
         resp = make_response(redirect('/'))
         resp.set_cookie('userID', str(y))
@@ -385,7 +389,7 @@ def add():
     else:
         return redirect('/')
 
-    return render_template('add.html', form=form,search=search,admin=name)
+    return render_template('add.html', form=form,search=search,admin=name,title='Добавление товара')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -469,6 +473,8 @@ def show():
     revs1=request.form.get('Rev')
     otziv=Revs.query.filter_by(product_id=nameId).all()
     user_id=current_user.get_id()
+    Keywordsbrand=content.brand
+    Keywordsname=content.name
     if user_id is None:
         user_id=int(request.cookies.get('userID'))
     cartProduct= Cart.query.filter_by(userid=user_id).count()
@@ -529,7 +535,7 @@ def show():
                 flash('Товар успешно добавлен в корзину','success')
                 return redirect(url_for('show', id=nameId))
     return render_template('show.html', search=search,title=content.name,content=content,
-    admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount)
+    admin=name,form=form,x=otziv,cartProduct=cartProduct,count=count,valuecount=valuecount,Keywordsbrand=Keywordsbrand,Keywordsname=Keywordsname)
 
 
 @app.route('/profile',methods=['GET', 'POST'])
@@ -548,7 +554,7 @@ def profile():
             return redirect ('/profile')
         except:
             return redirect ('/profile')
-    return render_template ('profile.html',admin=name,search=search,user=profileUser,otzivy=otzivy)
+    return render_template ('profile.html',admin=name,search=search,user=profileUser,otzivy=otzivy,title='Профиль')
 
 
 @app.route('/cart',methods=['GET' ,'POST'])
@@ -590,7 +596,7 @@ def cart():
                 try:
                     db.session.query(Cart).filter(Cart.userid==user_id).delete()
                     db.session.commit()
-                    flash('Спасибо за покупку','success')
+                    flash('Спасибо за покупку,Проверьте свою почту','success')
                     send_mail()
                     return redirect(url_for('cart'))
                 except:
@@ -607,7 +613,7 @@ def cart():
             oder=Oders(productid=i.productid,rebate=discount,price=summ,user_id=user_id,creationData=time,quantity=i.quantity)
             db.session.add(oder)
 
-        flash('Спасибо за покупку','success')
+        flash('Спасибо за покупку,Проверьте свою почту','success')
 
         try:
             db.session.query(Cart).filter(Cart.userid==user_id).delete()
@@ -630,7 +636,7 @@ def cart():
             return redirect(url_for('cart'))
 
     return render_template('cart.html',admin=name,search=search,items=cart,totalPrice=totalPrice,
-    discount=discount,summ=summ,cartProduct=cartProduct,user_id=int(user_id),anon=anon)
+    discount=discount,summ=summ,cartProduct=cartProduct,user_id=int(user_id),anon=anon,title='Корзина')
 
 
 def anonMail(name,email,lastName,Phone,City,Otdelenie):
@@ -674,7 +680,7 @@ def reset_password():
         else:
             flash ('Пользователь с таким e-mail не найден','danger')
         return redirect(url_for('login'))
-    return render_template('reset_password.html',admin=name,search=search,form=form)
+    return render_template('reset_password.html',admin=name,search=search,form=form,title='Сброс пароля')
 
 def send_password_reset_email(user):
     token = user.get_reset_password_token()
@@ -699,7 +705,7 @@ def res_pass(token):
         db.session.commit()
         flash('Пароль был изменен','success')
         return redirect(url_for('login'))
-    return render_template('res_pass.html', form=form,admin=name,search=search)
+    return render_template('res_pass.html', form=form,admin=name,search=search,title='Сброс пароля')
 
 @app.route('/edit', methods=['GET', 'POST'])
 @login_required
@@ -766,7 +772,7 @@ def edit():
     else:
         return redirect('/')
 
-    return render_template('edit.html', form=form,search=search,admin=name,title='edit profile')
+    return render_template('edit.html', form=form,search=search,admin=name,title='Редактирвание')
 
 
 @app.route('/edit-profile', methods=['GET', 'POST'])
@@ -796,7 +802,7 @@ def edit_profile():
             flash('Ваши изменения были сохранены','success')
             return redirect(url_for('profile'))
 
-    return render_template('edit-profile.html', form=form,search=search,admin=name,title='edit profile')
+    return render_template('edit-profile.html', form=form,search=search,admin=name,title='Редактирвание профиля')
 
 @app.route('/resume')
 def resume():
@@ -807,7 +813,7 @@ def resume():
 def about():
     search=SearchForm()
     name=Admin()
-    return render_template('aboutUs.html',search=search,admin=name,title='AboutUs')
+    return render_template('aboutUs.html',search=search,admin=name,title='О магазине')
 
 
 @app.route('/quickorder', methods=['POST'])
@@ -836,14 +842,13 @@ def quick():
 def delivery():
     search=SearchForm()
     name=Admin()
-    return render_template('delivery.html',search=search,admin=name,title='Delivery')
+    return render_template('delivery.html',search=search,admin=name,title='Доставка')
 
 @app.route('/contacts')
 def contacts():
     search=SearchForm()
     name=Admin()
-    return render_template('contacts.html',search=search,admin=name,title='Contacts')
+    return render_template('contacts.html',search=search,admin=name,title='Контакты')
 
 if __name__ == '__main__':
     app.run(debug=True)
-#
