@@ -21,6 +21,7 @@ import jwt
 from flask import make_response
 from random import randint
 from whitenoise import WhiteNoise
+from flask_compress import Compress
 
 
 app = Flask(__name__)
@@ -34,12 +35,8 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
-my_static_folders = (
-    'static/css/',
-    'templates/'
-)
-for static in my_static_folders:
-    app.wsgi_app.add_files(static)
+Compress(app)
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
