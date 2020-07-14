@@ -20,6 +20,7 @@ from time import time
 import jwt
 from flask import make_response
 from random import randint
+from whitenoise import WhiteNoise
 
 
 app = Flask(__name__)
@@ -32,6 +33,7 @@ app.config['UPLOAD_FOLDER'] = "static/images"
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
+app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
 
 
 class User(db.Model, UserMixin):

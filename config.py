@@ -1,6 +1,7 @@
 
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
+
 class MConfig :
 
     SECRET_KEY = '3254365h6k5g6kh7k5kjlhr5h4ouirhhh324'
