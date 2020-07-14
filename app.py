@@ -265,7 +265,6 @@ def page_not_found(error):
 
 
 @app.route('/', methods=['GET', 'POST'])
-@cache.cached(timeout=60*24)
 def index():
     name=Admin()
     input1=Inputs()
