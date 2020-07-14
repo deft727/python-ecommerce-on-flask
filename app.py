@@ -22,6 +22,8 @@ from flask import make_response
 from random import randint
 from whitenoise import WhiteNoise
 from flask_compress import Compress
+from flask_caching import Cache
+
 
 
 app = Flask(__name__)
@@ -36,6 +38,14 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
 Compress(app)
+
+config = {
+    "CACHE_TYPE": "simple", 
+    "CACHE_DEFAULT_TIMEOUT": 60*24
+}
+app.config.from_mapping(config)
+cache = Cache(app)
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -255,6 +265,7 @@ def page_not_found(error):
 
 
 @app.route('/', methods=['GET', 'POST'])
+@cache.cached(timeout=60*24)
 def index():
     name=Admin()
     input1=Inputs()
@@ -465,6 +476,7 @@ def remove():
 
 
 @app.route('/show',methods=['GET', 'POST'])
+@cache.cached(timeout=60*24)
 def show():
     form=Reviews()
     name=Admin()
