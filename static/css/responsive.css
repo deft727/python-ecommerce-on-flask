@@ -48,6 +48,7 @@
 
   .section-header .logo {
     max-height: 40px;
+    max-width: 40px;
     width: auto; }
   .section-header .search {
     margin-top: 1rem; }
