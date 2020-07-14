@@ -35,8 +35,12 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
-Compress(app)
+compress = Compress()
 
+def start_app():
+    app = Flask(__name__)
+    compress.init_app(app)
+    return app
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
