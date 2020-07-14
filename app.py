@@ -34,7 +34,12 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 app.wsgi_app = WhiteNoise(app.wsgi_app, root='static/')
-
+my_static_folders = (
+    'static/css/',
+    'templates/'
+)
+for static in my_static_folders:
+    app.wsgi_app.add_files(static)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
