@@ -47,9 +47,8 @@
     display: block; }
 
   .section-header .logo {
-    margin-right: 3px;
-    max-height: 52px;
-    max-width: 210;}
+    max-height: 50px;
+    width: auto; }
   .section-header .search {
     margin-top: 1rem; }
 
