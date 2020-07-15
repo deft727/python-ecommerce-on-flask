@@ -78,11 +78,11 @@
 				<span class="mr-md-auto">{{colvo}} Товаров </span>
 
 					<select class="mr-2 form-control"  onchange ="if (this.value)window.location.href=this.value">
-						<option value='/'>Сортировка : <option>
-						<option value="/?sort=1">Сотировать по Имени<option>
-						<option value="/?sort=2">Сотировать по Бренду<option>
-						<option value="/?sort=3">Сотировать по Возростанию цены<option>
-						<option value="/?sort=4">Сотировать по Убыванию цены <option>
+						<option value='/'>Сортировка : 
+						<option value="/?sort=1">Сотировать по Имени
+						<option value="/?sort=2">Сотировать по Бренду
+						<option value="/?sort=3">Сотировать по Возростанию цены
+						<option value="/?sort=4">Сотировать по Убыванию цены
 
 					</select>
 
@@ -155,13 +155,13 @@
 											{% endfor %}
 										</div>
 									{% else %}
-										{{ quick.Phone(class="form-control form-control") }}
+										{{ quick.Phone(class="form-control bfh-phone" ) }}
 									{% endif %}
 								</div>
 						</div>
 						<div class="modal-footer">
 						  <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-						  <button type="submit" class="btn btn-secondary" name="quickID" value="{{item.id}}">Заказать</button>
+						  <button type="submit" class="btn btn-success" name="quickID" value="{{item.id}}">Заказать</button>
 						</div>
 					  </div>
 					</form>
