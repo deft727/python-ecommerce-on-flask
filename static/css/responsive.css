@@ -48,8 +48,8 @@
 
   .section-header .logo {
     margin-right: 3px;
-    max-height: 100px;
-    width: auto; }
+    max-height: 52px;
+    max-width: 210;}
   .section-header .search {
     margin-top: 1rem; }
 
