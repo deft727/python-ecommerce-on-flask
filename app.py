@@ -116,7 +116,7 @@ class RegistrationForm(FlaskForm):
     confirmPassword = PasswordField('Подтвердите пароль', validators=[DataRequired(), EqualTo('password')],render_kw={"placeholder": "*****"})
     city = StringField('Город', validators=[DataRequired()],render_kw={"placeholder": "Харьков"})
     otdel=StringField('Отделение', validators=[DataRequired()],render_kw={"placeholder": "78"})
-    phone = TelField('Телефон',render_kw={"placeholder": "80501111111"})
+    phone = TelField('Телефон',render_kw={"placeholder": "+38(050)111-11-11"})
     submit = SubmitField('Зарегистрироваться')
 
     def validate_username(self, username):
@@ -233,7 +233,7 @@ class Oders(db.Model):
 
 class quickorderForm(FlaskForm):
     Name=StringField('Имя', validators=[DataRequired()],render_kw={"placeholder": "Введите Ваше Имя"})
-    Phone = IntegerField('Телефон', validators=[DataRequired()],render_kw={"placeholder": "8050111111"})
+    Phone = IntegerField('Телефон', validators=[DataRequired()],render_kw={"placeholder": "+38(050)111-11-11"})
 
 
 
