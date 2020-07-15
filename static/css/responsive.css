@@ -47,8 +47,8 @@
     display: block; }
 
   .section-header .logo {
-    margin-left: 3px;
-    max-height: 80px;
+    margin-right: 3px;
+    max-height: 100px;
     width: auto; }
   .section-header .search {
     margin-top: 1rem; }
