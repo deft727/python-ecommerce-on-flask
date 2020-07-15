@@ -47,10 +47,11 @@
     display: block; }
 
   .section-header .logo {
-    max-height: 100%;
-    width: auto; }
+    height:auto;
+    width: 100%; }
   .section-header .search {
-    margin-top: 1px; }
+    margin-top: 1px;
+  margin-right: -5px; }
 
   .navbar-expand .navbar-collapse {
     -webkit-box-orient: vertical;
