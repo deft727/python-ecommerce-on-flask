@@ -24,7 +24,7 @@
 <div class="container">
 
 <div class="row">
-	<main class="col-md-9">
+	<main class="col">
 <div class="card">
 
 <table class="table table-borderless table-shopping-cart">
@@ -90,7 +90,7 @@
 <div class="card-body border-top">
 {%if user_id>100000 and cartProduct%}
 
-<button type="button" class="btn btn-success float-md-right" data-toggle="modal" data-target="#exampleModalCenter">
+<button type="button" class="btn btn-success float-md-right mb-2" data-toggle="modal" data-target="#exampleModalCenter">
 	Заказать
   </button>
 
@@ -197,7 +197,7 @@
 	</div>
   </div>
 {%else%}
-	<button class="btn btn-success float-md-right"  name="oders"  value="True"> Заказать</button>
+	<button class="btn btn-success float-md-right md-2"  name="oders"  value="True"> Заказать</button>
 {%endif%}
 	<a href="/" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Продолжить покупки</a>
 </div>	
