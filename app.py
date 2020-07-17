@@ -814,8 +814,8 @@ def resume():
     return render_template('resume.html')
 
 
-@app.route('/aboutUs')
-def about():
+@app.route('/aboutus')
+def aboutus():
     search=SearchForm()
     name=Admin()
     return render_template('aboutUs.html',search=search,admin=name,title='О магазине')

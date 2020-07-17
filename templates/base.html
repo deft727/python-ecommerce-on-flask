@@ -12,11 +12,11 @@
 	     {% if title %}
 		 {{ title }}
   		 {% endif %}
-</title>
-<script src="/static/css/jquery.js" as="font"></script>
-<link href="/static/css/bootsrapcss.css" rel="stylesheet" type="text/css" as="style">
-<link href="static/css/ui.css" rel="stylesheet" type="text/css" as="style">
-<link href="static/css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" as="style">
+</title>   
+<script src="{{ url_for('static', filename='css/jquery.js') }}" as="font"></script>
+<link href="{{ url_for('static', filename='css/bootsrapcss.css') }}" rel="stylesheet" type="text/css" as="style">
+<link href="{{ url_for('static', filename='css/ui.css') }}"rel="stylesheet" type="text/css" as="style">
+<link href="{{ url_for('static', filename='css/responsive.css') }}" rel="stylesheet" media="only screen and (max-width: 1200px)" as="style">
 </head>
 <body >
 <header class="section-header">
@@ -26,7 +26,7 @@
 	<div class="col-xs-3 mr-1">
 		<a href="/" class="brand-wrap" alt="ParfumeLover Интернет-магазин распива оригинальной нишевой и люксовой
 		парфюмерии в Украине"> 
-			<img class="logo" src="static/images/logo/logo.png">
+			<img class="logo" src="{{ url_for('static', filename='images/logo/logo.png') }}">
 		</a>
 	</div>
 	<div class="col-md-5 col-6 ml-1">
@@ -47,10 +47,10 @@
 	<a  class="icon icon-sm rounded-circle border"role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
 	</a>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-	<a class="dropdown-item" href="/">Главная</a>
-    <a class="dropdown-item" href="/aboutUs">О Магазине</a>
-    <a class="dropdown-item" href="/delivery">Доставка и оплата</a>
-    <a class="dropdown-item" href="/contacts">Контакты</a>
+	<a class="dropdown-item" href="{{ url_for('index') }}">Главная</a>
+    <a class="dropdown-item" href="{{ url_for('aboutus') }}">О Магазине</a>
+    <a class="dropdown-item" href="{{ url_for('delivery') }}">Доставка и оплата</a>
+    <a class="dropdown-item" href="{{ url_for('contacts') }}">Контакты</a>
   </div>
 </div> 
 
@@ -61,23 +61,23 @@
 				{% if current_user.is_authenticated %}
 				<div class="widget-header icontext">
 
-				<a href="/profile" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
+				<a href="{{ url_for('profile') }}" class="icon icon-sm rounded-circle border"><i class="fa fa-user"></i></a>
 				<div class="text">
 					<span class="text-muted">Welcome {{current_user.username}}</span>
 					<div> 
 						<div class="widget-header icontext">
-						<a href="/logout"> Выйти</a>
+						<a href="{{ url_for('logout') }}"> Выйти</a>
 						</div>
 						{% else %}
 						<div class="widget-header icontext">
-						<a href="/login"  style='padding-right: 5px;'>Войти</a>  
+						<a href="{{ url_for('login') }}"  style='padding-right: 5px;'>Войти</a>  
 						</div>
 						<div class="widget-header icontext">
-						<a href="/register" style='padding-left: 4px;'> Зарегистрироваться</a>
+						<a href="{{ url_for('register') }}" style='padding-left: 4px;'> Зарегистрироваться</a>
 						{% endif %}
 						</div>		
 		{% if current_user.username==admin.name%}
-						<a href="/add"> | Добавить товар</a>
+						<a href="{{ url_for('add') }}"> | Добавить товар</a>
 						{% endif %}
 					</div>
 					</div>
@@ -124,13 +124,15 @@
 	<p class="font-weight-bold">Ссылки<span></span></p>
 	<ul class="thumbnail-widget">
 	<li>
-	<div class="thumb-content"><a href="/aboutUs">О Магазине</a></div>	
+
+
+	<div class="thumb-content"><a href="{{ url_for('aboutus') }}">О Магазине</a></div>	
 	</li>
 	<li>
-	<div class="thumb-content"><a href="/delivery">Доставка и оплата</a></div>	
+	<div class="thumb-content"><a href="{{ url_for('delivery') }}">Доставка и оплата</a></div>	
 	</li>
 	<li>
-		<div class="thumb-content"><a href="/contacts">Контакты</a></div>	
+		<div class="thumb-content"><a href="{{ url_for('contacts') }}">Контакты</a></div>	
 		</li>
 	</ul>
 	</div>
@@ -179,5 +181,7 @@
 	});
 	</script>
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"  as="font">
-	<script src="/static/css/bootstapjs.js" type="text/javascript" as="font"></script>
+	<script src="{{ url_for('static', filename='css/bootstapjs.js') }}" as="font"></script>
 	</html>
+
+
