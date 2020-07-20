@@ -29,27 +29,20 @@
 
 <table class="table table-borderless table-shopping-cart">
 <thead class="text-muted">
-<tr class="small text-uppercase">
-  <th scope="col">Продукт</th>
-  <th scope="col" width="120">Количество</th>
-  <th scope="col" width="120">Цена</th>
-  
-  <th scope="col" class="text-right" width="200"> </th>
+<tr class="small text-uppercase ">
+  <th scope="col" >Продукт</th>
+  <th scope="col"  >Количество</th>
+  <th scope="col" >Цена</th>
 </tr>
 </thead>
 {% for i in items %}
 
 <tbody>
 <tr>
-	<td>
-		<figure class="itemside">
-			<div class="aside"><img src={{i.prods.img1}}  class="img-sm" ></div>
-			<figcaption class="info">
-				<a href="/show?id={{i.prods.id}}" class="title text-dark">{{i.prods.brand}}</a>
-				<p >{{i.prods.name}}</p>
-			</figcaption>
-			
-		</figure>
+	<td>	
+		<img src={{i.prods.img1}}  class="img-sm" > <br>
+				<a href="/show?id={{i.prods.id}}" class="title text-dark">{{i.prods.brand}}<p >{{i.prods.name}}</p>
+				</a>
 	</td>
 	<td> 	
 		
@@ -73,21 +66,18 @@
 	<td> 
 		<div class="price-wrap"> 
 			<var class="price"> {{i.prods.price*i.quantity}} грн</var> 
-		</div> 
-	</td>
 	
 	<form action="" method="POST" name="deleteFromCart">
 
-	<td> 
-		<div class="price-wrap"> 
-
-	<button  class="btn btn-light float-sm-right"  name="deleteFromCart" value="{{i.prods.id}}"> Удалить </button></div>
+<br>
+	<button  class="btn btn-light"  name="deleteFromCart" value="{{i.prods.id}}"> Удалить </button></div>
 	</td>
 </tr></form>
 {%endfor%}
 
 </tbody>
 </table>
+
 <form action="" method="POST" name="oders">
 
 <div class="card-body border-top">
