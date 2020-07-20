@@ -10,7 +10,7 @@
 
 {% block body %}
 
-<main class="mt-5 pt-4" style="padding-bottom: 25px;">
+<main class="mt-1 pt-4">
     <div class="container dark-grey-text mt-5">
       <div class="row wow fadeIn">
         <div class="col-md-6 mb-4">
@@ -142,7 +142,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="container" style="max-width: 480px; margin-top:100px;">
+    <div class="container mt-5" style="max-width: 480px">
         {%if current_user.is_authenticated%}
         <form method="POST" action="" >
           {{ form.hidden_tag() }}

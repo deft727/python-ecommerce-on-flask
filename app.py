@@ -271,7 +271,7 @@ def index():
             items=Products.query.filter(Products.brand.contains(x))
         if x2:
             items=Products.query.filter(Products.aromat.contains(x2))
-        elif x and x2:
+        if x and x2:
             items=Products.query.filter(Products.brand.contains(x)  | Products.aromat.contains(x2))
 
     elif order is None:
@@ -286,11 +286,6 @@ def index():
         items = Products.query.order_by(Products.price.desc())
     else:
         items = Products.query.order_by(Products.creationData.desc())
-
-    if page and page.isdigit():
-        page=int(page)
-    else:
-        page=1
         
     data=request.form.get('search')
     if data is not None:
@@ -330,8 +325,12 @@ def index():
             db.session.commit()
             return redirect ('/')
 
-    pages=items.paginate(page=page,per_page=21)
+    if page and page.isdigit():
+        page=int(page)
+    else:
+        page=1
 
+    pages=items.paginate(page=page,per_page=21)
     colvo= items.count()
     cartProduct= Cart.query.filter_by(userid=user_id).count()
     brand=Products.query.distinct(Products.brand).group_by(Products.brand)
@@ -525,7 +524,6 @@ def show():
             valuecount=20
             count=4
     if  addtocart:
-
             item = db.session.query(Cart).filter(
             db.and_(Cart.userid == user_id, Cart.productid==nameId)).first()
             if item is None:
@@ -592,7 +590,6 @@ def cart():
         tovar.quantity=quantity
         db.session.commit()
         return redirect(url_for('cart'))
-
     oders=request.form.get('oders')
     if oders=='True':
             for i in cart:
