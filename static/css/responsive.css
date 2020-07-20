@@ -13,7 +13,7 @@
   .table-shopping-cart .itemside .info {
     padding: 0; }
   .table-shopping-cart .itemside .aside {
-    display: none; } }
+    display: auto; } }
 @media all and (max-width: 768px) {
   /* mobile devices */
   .section-header .search {

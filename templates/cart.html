@@ -33,6 +33,7 @@
   <th scope="col">Продукт</th>
   <th scope="col" width="120">Количество</th>
   <th scope="col" width="120">Цена</th>
+  
   <th scope="col" class="text-right" width="200"> </th>
 </tr>
 </thead>
@@ -42,7 +43,7 @@
 <tr>
 	<td>
 		<figure class="itemside">
-			<div class="aside"><img src=static/images/{{i.prods.img1}}  class="img-sm" alt=".jbg."></div>
+			<div class="aside"><img src={{i.prods.img1}}  class="img-sm" ></div>
 			<figcaption class="info">
 				<a href="/show?id={{i.prods.id}}" class="title text-dark">{{i.prods.brand}}</a>
 				<p >{{i.prods.name}}</p>
@@ -78,7 +79,9 @@
 	<form action="" method="POST" name="deleteFromCart">
 
 	<td> 
-	<button  class="btn btn-light float-sm-right"  name="deleteFromCart" value="{{i.prods.id}}"> Удалить </button>
+		<div class="price-wrap"> 
+
+	<button  class="btn btn-light float-sm-right"  name="deleteFromCart" value="{{i.prods.id}}"> Удалить </button></div>
 	</td>
 </tr></form>
 {%endfor%}
