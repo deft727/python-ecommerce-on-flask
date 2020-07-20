@@ -646,7 +646,7 @@ def anonMail(name,email,lastName,Phone,City,Otdelenie):
     oder=Oders.query.filter_by(user_id=id).all()
     with mail.connect() as conn:
         msg = Message("Заказ на сайте ParfumeLover АНОН",
-        recipients=["zarj09@gmail.com",email])
+        recipients=["parfumelovery@gmail.com",email])
         msg.html =render_template('anonOder.html',name=name,lastName=lastName,
         Phone=Phone,City=City,Otdelenie=Otdelenie,oder=oder)
         conn.send(msg)
@@ -660,7 +660,7 @@ def send_mail():
     user=Oders.query.filter_by(user_id=id).all()
     with mail.connect() as conn:
         msg = Message("Заказ на сайте ParfumeLover",
-        recipients=["zarj09@gmail.com",user[0].oder.email])
+        recipients=["parfumelovery@gmail.com",user[0].oder.email])
         msg.html =render_template('mail.html',user=user)
         conn.send(msg)
     db.session.query(Oders).filter(Oders.user_id==id).delete()
@@ -831,7 +831,7 @@ def quick():
     if phone and PROD:
         with mail.connect() as conn:
             msg = Message("[ParfumeLover] Быстрый заказ",
-            recipients=['zarj09@gmail.com'])
+            recipients=['parfumelovery@gmail.com'])
             msg.html =render_template('quickorder_email.html',name=name,phone=phone,time=time,
                                         price=price,nazv=nazv,brand=brand)
             conn.send(msg)

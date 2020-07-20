@@ -12,10 +12,10 @@ class MConfig :
     MAIL_PORT = 465
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
-    ADMINS = ['zarj09@gmail.com']
-    MAIL_USERNAME = 'zarj09@gmail.com'
-    MAIL_DEFAULT_SENDER = 'zarj09@gmail.com'
-    MAIL_PASSWORD = 'Kirill9925'
+    ADMINS = ['parfumelovery@gmail.com']
+    MAIL_USERNAME = 'parfumelovery@gmail.com'
+    MAIL_DEFAULT_SENDER = 'parfumelovery@gmail.com'
+    MAIL_PASSWORD = 'Kirill99'
 
     MY_KEY = 1234
     SUPERUSER = 'root'

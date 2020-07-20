@@ -4,3 +4,7 @@ venv/
 ../venv/
 __pycache__/
 /venv/*
+config
+/config
+config.py
+/config.py
