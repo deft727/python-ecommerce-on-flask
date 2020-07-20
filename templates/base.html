@@ -53,11 +53,12 @@
     <a class="dropdown-item" href="{{ url_for('contacts') }}">Контакты</a>
   </div>
 </div> 
-
-</div><div class="widget-header  mr-2">
-	<a href="/cart" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
-	<span class="badge badge-pill badge-danger notify">{%block cart%}{%endblock%}</span><br>
 </div>
+<div class="widget-header  mr-2">
+	<a href="/cart" class="icon icon-sm rounded-circle border"><i class="fa fa-shopping-cart"></i></a>
+	<span class="badge badge-pill badge-danger notify">{%block cart%}{%endblock%}</span>
+</div>
+<br>
 				{% if current_user.is_authenticated %}
 				<div class="widget-header icontext">
 
@@ -69,6 +70,7 @@
 						<a href="{{ url_for('logout') }}"> Выйти</a>
 						</div>
 						{% else %}
+						<br>
 						<div class="widget-header icontext m-1">
 						<a href="{{ url_for('login') }}"  >Войти</a>  
 						</div>

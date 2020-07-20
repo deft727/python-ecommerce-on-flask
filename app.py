@@ -284,8 +284,8 @@ def index():
         items =  Products.query.order_by(Products.price)
     elif order=='4':
         items = Products.query.order_by(Products.price.desc())
-    else:
-        items = Products.query.order_by(Products.creationData.desc())
+    # else:
+    #     items = Products.query.order_by(Products.creationData.desc())
         
     data=request.form.get('search')
     if data is not None:
