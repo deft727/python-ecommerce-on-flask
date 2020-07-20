@@ -24,7 +24,6 @@ from whitenoise import WhiteNoise
 from flask_compress import Compress
 from admin import Admin
 
-
 app = Flask(__name__)
 app.config.from_object(MConfig)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 60*180
