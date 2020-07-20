@@ -24,7 +24,7 @@
 				<form action="" method="POST" name='edit'>
 				<figure class="icontext">
 						<div class="icon">
-							<img class="rounded-circle img-sm border" src="/static/images/avatar/avatar.png">
+							<img class="rounded-circle img-sm border" src="{{ url_for('static', filename='images/avatar/avatar.png') }}">
 						</div>
 						<div class="text" >
 							<strong> {{user.username}} </strong> <br> 
@@ -52,9 +52,9 @@
 						  </tr></table>
 
 	<a class="btn btn-secondary" href="/edit-profile">редактировать</a>				
-				</p> <br></div>
+				</p> <br>
 			</form>
-
+		</div>
 			</div> 
 		</article> 
 

@@ -22,6 +22,7 @@ from flask import make_response
 from random import randint
 from whitenoise import WhiteNoise
 from flask_compress import Compress
+from admin import Admin
 
 
 app = Flask(__name__)
@@ -189,9 +190,6 @@ class SearchForm(FlaskForm):
 
 class Inputs(FlaskForm):
     myField = SelectField(u'Field name', validators = [DataRequired()])
-
-class Admin():
-    name='deft'
 
 
 class Revs(db.Model):
