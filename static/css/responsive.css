@@ -51,13 +51,10 @@
     width: 100%; }
   .section-header .search {
     margin-top: 1px;
-    margin-right: -5px; 
-    height:auto;
-    width: 100%;}
+  margin-right: -5px; }
 
   .navbar-expand .navbar-collapse {
     -webkit-box-orient: vertical;
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column; } }
-
