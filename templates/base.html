@@ -29,10 +29,10 @@
 			<img class="logo m-1" src="{{ url_for('static', filename='images/logo/logo.png') }}">
 		</a>
 	</div>
-	<div class="col-lg-5 col-sm-12">
+	<div class="col-lg-5 col-sm-12 ">
 		<form  action="" method="POST">
 
-			<div class="input-group w-90">
+			<div class="input-group w-90 md-2">
 				
 				{{search.search( class="form-control ")}}
 			    <div class="input-group-append">
@@ -44,9 +44,9 @@
 	</div> 
 			<div class="widget-header icontext ">
 <div class="dropdown show">
-	<a  class="icon icon-sm rounded-circle border"role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
+	<a  class="icon icon-sm rounded-circle border ml-2"role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i>
 	</a>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+  <div class="dropdown-menu " aria-labelledby="dropdownMenuLink">
 	<a class="dropdown-item" href="{{ url_for('index') }}">Главная</a>
     <a class="dropdown-item" href="{{ url_for('aboutus') }}">О Магазине</a>
     <a class="dropdown-item" href="{{ url_for('delivery') }}">Доставка и оплата</a>
