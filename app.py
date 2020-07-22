@@ -76,7 +76,6 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-
 class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     brand = db.Column(db.String(50), nullable=False)
@@ -233,7 +232,6 @@ class quickorderForm(FlaskForm):
     Phone = IntegerField('Телефон', validators=[DataRequired()],render_kw={"placeholder": "+38(050)111-11-11"})
 
 
-
 class anonForm(FlaskForm):
     Name=StringField('Имя', validators=[DataRequired()],render_kw={"placeholder": "Имя"})
     lastName=StringField('Фамилия', validators=[DataRequired()],render_kw={"placeholder": "Фамилия"})
@@ -264,12 +262,12 @@ def index():
     x2=request.form.get("myfilter_aromat")
     quick=quickorderForm()
     if x or x2 is not None:
-        if x:
+        if x and x2 is None:
             items=Products.query.filter(Products.brand.contains(x))
-        if x2:
+        if x2 and x is None:
             items=Products.query.filter(Products.aromat.contains(x2))
         if x and x2:
-            items=Products.query.filter(Products.brand.contains(x)  | Products.aromat.contains(x2))
+            items=Products.query.filter(Products.brand.contains(x) | Products.aromat.contains(x2))
 
     elif order is None:
         items = Products.query.order_by(Products.creationData.desc())
@@ -281,8 +279,6 @@ def index():
         items =  Products.query.order_by(Products.price)
     elif order=='4':
         items = Products.query.order_by(Products.price.desc())
-    # else:
-    #     items = Products.query.order_by(Products.creationData.desc())
         
     data=request.form.get('search')
     if data is not None:
