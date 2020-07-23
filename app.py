@@ -328,9 +328,16 @@ def index():
     cartProduct= Cart.query.filter_by(userid=user_id).count()
     brand=Products.query.distinct(Products.brand).group_by(Products.brand)
     aromat=Products.query.distinct(Products.aromat).group_by(Products.aromat)
-
+    if order is not None:
+        addSort = '&sort=' + order
+        sortProduct = int(order)
+    else :
+        addSort = ''
+        sortProduct = 0
+    
     return render_template ('index.html',items=items,title='ParfumeLover',
-    colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat,cartProduct=cartProduct,quick=quick)
+    colvo=colvo,pages =pages,search=search,input=input1,brand=brand,admin=name,aromat=aromat,
+    cartProduct=cartProduct,quick=quick, sortProduct=sortProduct, addSort=addSort)
 
 
 @app.route('/add', methods=['GET', 'POST'])

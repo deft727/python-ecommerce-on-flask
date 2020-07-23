@@ -74,16 +74,31 @@
 	
 	<header class="border-bottom mb-4 pb-3">
 
-			<div class="form-inline">
-				<span class="mr-md-auto">{{colvo}} Товаров </span>
-					<select class="mr-2 form-control"  onchange ="if (this.value)window.location.href=this.value">
-						<option value='/' selected disabled>Сортировка : 
-						<option value="/?sort=1" >Сотировать по Имени</option>
-						<option value="/?sort=2">Сотировать по Бренду</option>
-						<option value="/?sort=3">Сотировать по Возростанию цены</option>
-						<option value="/?sort=4">Сотировать по Убыванию цены</option>
-					</select>
-			</div>
+		<div class="form-inline">
+			<span class="mr-md-auto">{{colvo}} Товаров </span>
+
+				<select class="mr-2 form-control"  onchange ="if (this.value)window.location.href=this.value">
+					<option value='/'>Сортировка : 
+					<option value="/?sort=1"
+					{% if sortProduct == 1 %}
+							selected="selected"
+						{% endif %} >Сотировать по Имени</option>
+					<option value="/?sort=2"
+					{% if sortProduct == 2 %}
+							selected="selected"
+						{% endif %}
+					>Сотировать по Бренду</option>
+					<option value="/?sort=3"
+					{% if sortProduct == 3 %}
+							selected="selected"
+						{% endif %}>Сотировать по Возростанию цены</option>
+					<option value="/?sort=4"
+					{% if sortProduct == 4 %}
+							selected="selected"
+						{% endif %}>Сотировать по Убыванию цены</option>
+
+				</select>
+		</div>
 	</header>
 {%endblock%}	
 
@@ -183,33 +198,30 @@
 	{% endfor %}
 	</div>	
 
-
-<nav aria-label="...">
-  <ul class="pagination">
-	<li {%if not pages.prev_num%} class="page-item disabled" {%else%} class="page-item " {%endif%}>
-      <a class="page-link" href="{{ url_for('index', page = pages.prev_num) }}" tabindex="-1">«</a>
-	</li>
-
-	{%for page in pages.iter_pages() %} 
-	{%if  page==pages.page%} <li class="page-item active">{%endif%}
-		{%if page %}
-
-      <a class="page-link" href="./?page={{page}}">{{page}}<span class="sr-only">(current)</span></a>
-	</li>
-	{%else%}
-	<li class="page-item disabled"><a class="page-link" href="">...</a></li>
-	{%endif%}
-	{% endfor %}
-
-	<li {%if not pages.next_num%} class="page-item disabled" {%else%} class="page-item " {%endif%}>
-		<a class="page-link" href="{{ url_for('index', page = pages.next_num) }}">»</a>
+	<nav aria-label="...">
+		<ul class="pagination">
+		  <li {%if not pages.prev_num%} class="page-item disabled" {%else%} class="page-item " {%endif%}>
+			<a class="page-link" href='./?page={{pages.prev_num}}{{addSort}}' tabindex="-1">«</a>
+		  </li>
+		  
+		  {%for page in pages.iter_pages() %} 
+		  {%if  page==pages.page%} <li class="page-item active">{%endif%}
+			  {%if page %}
+			  
+			<a class="page-link" href="./?page={{page}}{{addSort}}">{{page}} <span class="sr-only">(current)</span></a>
+		  </li>
+		  {%else%}
+		  <li class="page-item disabled"><a class="page-link" href="">...</a></li>
+		  {%endif%}
+		  {% endfor %}
 	  
-    </li>
-</ul>
-</nav>
+		  <li {%if not pages.next_num%} class="page-item disabled" {%else%} class="page-item " {%endif%}>
+			  <a class="page-link" href="./?page={{pages.next_num}}{{addSort}}">»</a>
+		  </li>
+	  </ul>
+	  </nav>
 
 		<img src="{{ url_for('static', filename='images/uppp.png') }}" alt="Наверх" title="Наверх" id="Go_Top" class="uppbottom">
 		
-	  </nav>
 
 	  {% endblock %}
