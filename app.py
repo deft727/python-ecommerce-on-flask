@@ -244,7 +244,14 @@ class anonForm(FlaskForm):
         x=str(Phone.data)
         if len(x)<8:
             raise ValidationError('неверный формат телефона')
-
+    def validate_Name(self,Name):
+        n=str(Name.data)
+        if len (n)<4:
+            raise ValidationError('неверный формат имени')
+    def validate_lastName(self,lastName):
+        l=str(lastName.data)
+        if len (l)<4:
+            raise ValidationError('неверный формат фамилии')
 
 @app.errorhandler(404)
 def page_not_found(error):
