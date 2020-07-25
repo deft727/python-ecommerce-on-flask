@@ -105,7 +105,7 @@
           </div>
                 </div>
               </div>
-              <table class="table table-bordered">
+              <table class="table table-bordered ">
                 <thead>
                   <tr>
                     <th scope="col">Описание:</th>
@@ -117,7 +117,7 @@
                   </tr>
                 </tbody>
               </table>
-    <table class="table table-bordered">
+    <table class="table table-bordered mb-5">
       <thead>
         <tr>
           <th scope="col">Отзывы:</th>
@@ -142,7 +142,11 @@
         </tr>
       </tbody>
     </table>
-    <div class="container mt-5" style="max-width: 480px">
+
+
+    <div class="container w-50 mb-5">
+      <div class="row">
+        <div class="col ">
         {%if current_user.is_authenticated%}
         <form method="POST" action="" >
           {{ form.hidden_tag() }}
@@ -155,9 +159,10 @@
               {% else %}
                   {{ form.Rev(class="form-control form-control-lg") }}
               {% endif %}
-              <div class="formbtm">
-                {{  form.Btm(class="btn btn-primary") }} 
+                              {{  form.Btm(class="btn btn-primary float-right") }} 
                 {%endif%}
           </div>
+        </div>         
+      </div>
   </main>
   {% endblock %}
