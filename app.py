@@ -453,7 +453,7 @@ def logout():
     return redirect('/')
 
 
-@app.route('/remove', methods=['GET'])
+@app.route('/remove', methods=['GET', 'POST'])
 @login_required
 def remove():
     productId = request.args.get('id')
@@ -818,14 +818,14 @@ def resume():
     return render_template('resume.html')
 
 
-@app.route('/aboutus')
+@app.route('/aboutus', methods=['GET', 'POST'])
 def aboutus():
     search=SearchForm()
     name=Admin()
     return render_template('aboutUs.html',search=search,admin=name,title='О магазине')
 
 
-@app.route('/quickorder', methods=['POST'])
+@app.route('/quickorder', methods=['GET', 'POST'])
 def quick():
     name=request.form.get('Name')
     phone=request.form.get('Phone')
@@ -847,13 +847,13 @@ def quick():
     flash('Заказ принят в ближайшее время я с Вами свяжусь :)','success')
     return redirect('/')
 
-@app.route('/delivery')
+@app.route('/delivery', methods=['GET', 'POST'])
 def delivery():
     search=SearchForm()
     name=Admin()
     return render_template('delivery.html',search=search,admin=name,title='Доставка')
 
-@app.route('/contacts')
+@app.route('/contacts', methods=['GET', 'POST'])
 def contacts():
     search=SearchForm()
     name=Admin()
