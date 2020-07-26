@@ -257,6 +257,9 @@ class anonForm(FlaskForm):
 def page_not_found(error):
     return render_template('404.html')
 
+@app.errorhandler(500)
+def server_error(error):
+    return redirect ('/')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -486,8 +489,23 @@ def show():
     user_id=current_user.get_id()
     Keywordsbrand=content.brand
     Keywordsname=content.name
+
+    user_id=current_user.get_id()
+    userID = request.cookies.get('userID')
+    users=[]
+    if userID is None:
+        y=randint(100001, 99999999999)
+        for i in users:
+            if userID==i:
+                y=randint(100001, 99999999999)
+        users.append(y)
+        user_id=y
+        resp = make_response( redirect(url_for('show', id=nameId)))
+        resp.set_cookie('userID', str(y))
+        return resp
     if user_id is None:
-        user_id=int(request.cookies.get('userID'))
+        user_id=int(userID)
+
     cartProduct= Cart.query.filter_by(userid=user_id).count()
 
     if revies.validate_on_submit():
