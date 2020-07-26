@@ -878,4 +878,4 @@ def contacts():
     return render_template('contacts.html',search=search,admin=name,title='Контакты')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
