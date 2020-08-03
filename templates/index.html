@@ -111,13 +111,11 @@
 		<figure class="card card-product-grid" >
 			<div class="img-wrap" >
 				{% if current_user.username==admin.name%}
-				
 				<div>   
 					<a class="btn btn-success" href="/edit?id={{ item.id }}">редактировать</a>
 	  
 					<a class="btn btn-danger" href="/remove?id={{ item.id }}">удалить</a>
-				  </div> 
-
+				  </div>
 				{%endif%} 
 				{%if item.img1%}
 				
