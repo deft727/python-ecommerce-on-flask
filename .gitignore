@@ -4,3 +4,6 @@ venv/
 ./venv/
 __pycache__/
 /venv/*
+*app.db
+/app.db
+*.db
