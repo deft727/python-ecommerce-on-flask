@@ -1,12 +1,41 @@
+<div class="row m-2">
+    <div class="col-sm">
+      <section class="section-name bg padding-y">
+          <div class="container">
+
 <p>Уважаемый <b>{{name}}</b> ваш заказ на сумму {{oder[0].price}}<b>грн</b> принят!</p>
 <p>В ближайшее время с вами свяжется наш менеджер.</p>
-<p>Ваши данные для отпарвки:</p> 
-<p><b>Фамилия:</b>{{lastName}}.</p>
-<p><b>Телефон:</b>{{Phone}}.</p>
-<p><b>Город:</b> {{City}}.</p>
-<p><b>Отделение:</b> {{Otdelenie}}.</p>
+<p>Ваши данные для отправки:</p> 
+
+<p><b>Фамилия: </b>{{lastName}}.</p>
+<p><b>Телефон: </b>{{Phone}}.</p>
+<p><b>Город: </b> {{City}}.</p>
+<p><b>Отделение: </b> {{Otdelenie}}.</p>
 <p>Торвары
     {%for i in oder%}
     {{i.prod.brand}}  ,{{i.prod.name}}, {{i.prod.price}}  в количестве {{i.quantity*5}} мл <br>
 </p>
 {%endfor%}
+
+<br>
+<strong>Контакты для связи:</strong>
+<p>	<i class="fa fa-volume-control-phone" aria-hidden="true"> Вайбер:  <a href="viber://add?number=120345678910">+38(050)111-11-11 </a></i>
+</p>   
+ 
+<p>
+<i class="fa fa-phone" aria-hidden="true"> Телефон:<a href="tel:+78142332211"> +7(814)-233-22-11</a> </i>
+</p>
+   
+
+<p>
+<i class="fa fa-instagram " aria-hidden="true"> Инстаграмм: <a href="https://www.instagram.com/_parfume_lover_/?hl=ru">@_parfume_lover_</a></i><br>
+</p>
+
+</p>	<i class="fa fa-mobile" aria-hidden="true"><a href=" https://t.me/parfumeloverybot" >  Телеграм бот</i>
+</p><br>
+</div>
+
+</div>
+</section>
+</div>
+</div>

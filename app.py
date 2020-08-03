@@ -602,7 +602,7 @@ def cart():
     for y in cart:
         totalPrice+=y.prods.price*y.quantity
     summ=totalPrice
-    if totalPrice>1500:
+    if totalPrice>1000:
         discount=5
         summ=int(summ-(summ/100*discount))
     value=request.form.get("VALUE")
@@ -618,16 +618,17 @@ def cart():
     oders=request.form.get('oders')
     if oders=='True':
             for i in cart:
+                # print(i.quantity)
                 oder=Oders(productid=i.productid,rebate=discount,price=summ,user_id=user_id,creationData=time,quantity=i.quantity)
                 db.session.add(oder)
-                try:
-                    db.session.query(Cart).filter(Cart.userid==user_id).delete()
-                    db.session.commit()
-                    flash('Спасибо за покупку,Проверьте свою почту','success')
-                    send_mail()
-                    return redirect(url_for('cart'))
-                except:
-                    return redirect(url_for('cart'))
+            try:
+                db.session.query(Cart).filter(Cart.userid==user_id).delete()
+                db.session.commit()
+                flash('Спасибо за покупку,Проверьте свою почту','success')
+                send_mail()
+                return redirect(url_for('cart'))
+            except:
+                return redirect(url_for('cart'))
 
     if anon.validate_on_submit():
         name=request.form.get('Name')
@@ -683,6 +684,8 @@ def send_mail():
     if id is None:
         id=int(request.cookies.get('userID'))
     user=Oders.query.filter_by(user_id=id).all()
+    # for i in user:
+    #     print(i.quantity)
     with mail.connect() as conn:
         msg = Message("Заказ на сайте ParfumeLover",
         recipients=["parfumelovery@gmail.com",user[0].oder.email])
@@ -712,7 +715,7 @@ def reset_password():
 def send_password_reset_email(user):
     token = user.get_reset_password_token()
     with mail.connect() as conn:
-        msg = Message("[ParfumeLovwe] Сброс пароля",
+        msg = Message("[ParfumeLover] Сброс пароля",
         recipients=[user.email])
         msg.html =render_template('reset.html',user=user,token=token)
         conn.send(msg)
@@ -878,4 +881,4 @@ def contacts():
     return render_template('contacts.html',search=search,admin=name,title='Контакты')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

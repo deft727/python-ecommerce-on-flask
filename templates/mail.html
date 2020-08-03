@@ -1,16 +1,49 @@
+
+<div class="row m-2">
+    <div class="col-sm">
+      <section class="section-name bg padding-y">
+          <div class="container">
 Уважаемый , {{user[0].oder.username}} , Вы сделали заказ на сайте <a href="https://parfumelover.herokuapp.com/">ParfumeLover</a>
 
 на сумму    {{user[0].price}} грн. <br>
 
-Информация о доставке:
+Информация о доставке: <br>
 
-Тел : {{user[0].oder.phone}}
+Тел : {{user[0].oder.phone}} <br>
 
-Город {{user[0].oder.city}}
+Имя  : {{user[0].oder.name}} <br>
 
-Отдел НП: {{user[0].oder.otdel}}
+Фамилия : {{user[0].oder.lastname}} <br>
+
+Город {{user[0].oder.city}} <br>
+
+Отделение НП: {{user[0].oder.otdel}} <br>
+
 Купленые товары:
 
 {%for i in user%}
-<b>{{i.prod.brand}}</b>, <b>{{i.prod.name}}</b>   {{i.quantity*5}} мл
+<b>{{i.prod.brand}}</b>, <b>{{i.prod.name}}</b> , <i> {{i.quantity*5}} мл </i> <br>
 {%endfor%}
+<br>
+<strong>Контакты для связи:</strong>
+<p>	<i class="fa fa-volume-control-phone" aria-hidden="true"> Вайбер:  <a href="viber://add?number=120345678910">+38(050)111-11-11 </a></i>
+</p>   
+ 
+<p>
+<i class="fa fa-phone" aria-hidden="true"> Телефон:<a href="tel:+78142332211"> +7(814)-233-22-11</a> </i>
+</p>
+   
+
+<p>
+<i class="fa fa-instagram " aria-hidden="true"> Инстаграмм: <a href="https://www.instagram.com/_parfume_lover_/?hl=ru">@_parfume_lover_</a></i><br>
+</p>
+
+</p>	<i class="fa fa-mobile" aria-hidden="true"><a href=" https://t.me/parfumeloverybot" >  Телеграм бот</i>
+</p><br>
+</div>
+
+</div>
+</section>
+</div>
+</div>
+
