@@ -1,7 +1,8 @@
 .vscode/
 venv/
 *.pyc
-../venv/
+./venv/
 __pycache__/
 /venv/*
-*.app.db
+*app.db
+/app.db
