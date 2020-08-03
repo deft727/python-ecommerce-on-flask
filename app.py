@@ -26,7 +26,7 @@ from admin import Admin
 
 app = Flask(__name__)
 app.config.from_object(MConfig)
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 60*180
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 60*60*80
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
